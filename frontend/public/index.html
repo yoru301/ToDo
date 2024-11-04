@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body>
+    <div id="myDIV" class="header">
+        <h2 style="margin:5px">Moj To-Do List</h2>
+        <div class="create-task">
+            <input type="text" id="taskTitle" placeholder="Title..." />
+            <input type="date" id="taskEndDate" placeholder="End Date..." />
+            <input type="text" id="taskDescription" placeholder="Description..." />
+            <span onclick="createTask()" class="addBtn">Add Task</span>
+        </div>
+        <div class="search-wrapper">
+            <input placeholder="Search" type="search" id="search" data-search>
+        </div>
+    </div>
+    <ul id="myUL">
+
+    </ul>
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Edit Task</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label for="editTaskTitle" class="form-label">Title</label>
+                        <input type="text" id="editTaskTitle" class="form-control" placeholder="Title...">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editTaskEndDate" class="form-label">End Date</label>
+                        <input type="date" id="editTaskEndDate" class="form-control">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editTaskDescription" class="form-label">Description</label>
+                        <input type="text" id="editTaskDescription" class="form-control" placeholder="Description...">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" onclick="updateTask()">Update Task</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS and Popper.js -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

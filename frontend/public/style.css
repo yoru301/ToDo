@@ -1,0 +1,175 @@
+body {
+  margin: 0;
+  min-width: 250px;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+ul {
+  margin: 0;
+  padding: 0;
+}
+
+ul li {
+  cursor: pointer;
+  position: relative;
+  padding: 12px 20px 12px 20px;
+  list-style-type: none;
+  background: #eee;
+  font-size: 18px;
+  transition: 0.2s;
+
+  -webkit-user-select: none;
+  -moz-user-select: none;
+  -ms-user-select: none;
+  user-select: none;
+}
+
+ul li:nth-child(odd) {
+  background: #f9f9f9;
+}
+
+ul li:hover {
+  background: #ddd;
+}
+
+ul li.checked {
+  background: #888;
+  color: #fff;
+  text-decoration: line-through;
+}
+
+ul li.checked::before {
+  content: "";
+  position: absolute;
+  border-color: #fff;
+  border-style: solid;
+  border-width: 0 2px 2px 0;
+  top: 10px;
+  left: 16px;
+  transform: rotate(45deg);
+  height: 15px;
+  width: 7px;
+}
+
+.close {
+  position: absolute;
+  right: 0;
+  top: 0;
+  padding: 12px 16px 12px 16px;
+}
+
+.close:hover {
+  background-color: #1443bb;
+  color: white;
+}
+
+.header {
+  background-color: #366ff4;
+  padding: 30px 40px;
+  color: white;
+  text-align: center;
+}
+
+.header:after {
+  content: "";
+  display: table;
+  clear: both;
+}
+
+input {
+  margin: 0;
+  border: none;
+  border-radius: 0;
+  width: 75%;
+  padding: 10px;
+  float: left;
+  font-size: 16px;
+}
+
+.addBtn {
+  padding: 10px;
+  width: 25%;
+  background: #84c7ff;
+  color: #000000;
+  float: left;
+  text-align: center;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s;
+  border-radius: 0;
+}
+
+.addBtn:hover {
+  background-color: #144c88;
+  color: #ffffff;
+}
+
+.task-content {
+  display: flex; /* Use flexbox for layout */
+  flex-direction: row; /* Stack children vertically */
+  align-items: center; /* Center items horizontally */
+  justify-content: space-between;
+}
+
+.delete-button {
+  background-color: rgb(226, 41, 41); /*background for delete button */
+  color: white; /* White text color */
+  border: none; /* Remove border */
+  padding: 5px 10px; /* Padding for button */
+  cursor: pointer; /* Pointer cursor on hover */
+}
+
+.delete-button:hover {
+  background-color: darkred; /* Darker shade on hover */
+}
+
+.search-wrapper {
+  display: flex;
+  width: 100%;
+  margin-bottom: 10px;
+  justify-content: center;
+}
+
+.create-task {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 10px;
+}
+
+.modal {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+.modal-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 80%; /* Could be more or less, depending on screen size */
+}
+
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
