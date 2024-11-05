@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "task")  // Maps this entity to the 'task' table in your database
+@Table(name = "tasks")  // Maps this entity to the 'task' table in your database
 public class Task {
 
     @Id
