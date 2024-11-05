@@ -8,7 +8,7 @@
 
 - Jan Ančevski
 - Tilen Gabor
-- Hanan Mešićz
+- Hanan Mešić
 
 ## 1. Namen aplikacije
 
