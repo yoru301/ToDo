@@ -42,3 +42,30 @@ Najprej klonirajte repozitorij na svoj računalnik:
 git clone https://github.com/kihecpihec/ToDo.git
 cd ToDo
 ```
+
+## 5. DPU
+
+![DPU](DPURIS.png)
+
+## 6. Besednjak
+
+### 6.1 Naloga (Task)
+-**Definicija:** Osnovna enota v aplikaciji, ki predstavlja opravilo ali cilj, ki ga želi uporabnik doseči.
+
+-**Uporaba:** Naloge lahko uporabnik oznaci (narejeno, nenarejeno, v poteku...), zato da vidi svoj napredek.
+### 6.2 Rok (Deadline)
+-**Definicija:** Določen datum, do kdaj naj bo naloga dokončana.
+
+-**Uporaba:** Uporabnik lahko nastavi rok za vsako nalogo, da jo lažje opravi pravočasno.
+### 6.3 Prioriteta (Priority)
+-**Definicija:** Vrednost, ki nalogi določa njeno pomembnost. Običajno je rangirana od "nizke" do "visoke" prioritete.
+
+-**Uporaba:** Uporabniki lahko določijo prioriteto vsaki nalogi, kar omogoča lažjo organizacijo opravil po pomembnosti.
+### 6.4  Iskalna vrstica (Search Bar)
+-**Definicija:** Orodje v uporabniškem vmesniku, ki omogoča uporabnikom, da hitro poiščejo določeno nalogo.
+
+-**Uporaba:** Uporabniki lahko hitro najdejo specifične naloge z vnosom besed v iskalno vrstico, kar izboljša navigacijo med številnimi nalogami.
+### 6.5 Uporabnik (User)
+-**Definicija:** Oseba, ki uporablja aplikacijo "To-Do" za organizacijo in upravljanje svojih nalog.
+
+-**Uporaba:** Uporabnik se lahko registrira in prijavi v aplikacijo, da dostopa do svojih osebnih seznamov nalog, doda nove naloge, označi naloge kot opravljene, ter uporablja iskalne funkcije za učinkovitejše sledenje napredku.
