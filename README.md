@@ -1,8 +1,12 @@
 # ToDo
 
+## Vizija projekta
+
+**Cilj aplikacije** je uporabnikom omogočiti enostaven in intuitiven način za ustvarjanje, urejanje in sledenje dnevnim opravilom ali večjim projektom. To-Do želi izboljšati uporabniško izkušnjo upravljanja z nalogami tako, da združi enostavnost uporabe in funkcionalnosti, ki so uporabnikom resnično v pomoč, kot so opomniki, prioritizacija nalog ter organizacija v skupine ali projekte. Aplikacija je namenjena tako posameznikom kot ekipam, ki želijo učinkoviteje organizirati svoj čas, povečati osredotočenost na ključna opravila in zmanjšati občutek preobremenjenosti.
+
 ## 1. Namen aplikacije
 
-**To-Do** je preprosta in intuitivna aplikacija za upravljanje nalog, ki uporabnikom omogoča organizacijo in sledenje njihovim opravilom. Namenjena je uporabnikom, ki želijo izboljšati svojo produktivnost, upravljati vsakodnevna opravila ali enostavno spremljati napredek pri delu na različnih projektih. Aplikacija sledi arhitekturi `frontend-backend`, kjer frontend skrbi za uporabniški vmesnik, backend pa za poslovno logiko in komunikacijo z bazo podatkov.
+**ToDo** je preprosta in intuitivna aplikacija za upravljanje nalog, ki uporabnikom omogoča organizacijo in sledenje njihovim opravilom. Namenjena je uporabnikom, ki želijo izboljšati svojo produktivnost, upravljati vsakodnevna opravila ali enostavno spremljati napredek pri delu na različnih projektih. Aplikacija sledi arhitekturi `frontend-backend`, kjer frontend skrbi za uporabniški vmesnik, backend pa za poslovno logiko in komunikacijo z bazo podatkov.
 
 ## 2. Projektna struktura
 
@@ -43,6 +47,24 @@ git clone https://github.com/kihecpihec/ToDo.git
 cd ToDo
 ```
 
+#### 2. Namestitev odvisnosti
+
+V korenski mapi in podmapah za frontend in backend namestite vse potrebne odvisnosti:
+
+```bash
+cd frontend
+npm install
+```
+
+#### 3. Zagon aplikacije
+
+V backend mapi zaženite strežnik, nato zaženite aplikacijo na frontendu.
+
+```bash
+cd frontend
+node index.js
+```
+
 ## 5. DPU
 
 ![DPU](DPURIS.png)
@@ -50,22 +72,31 @@ cd ToDo
 ## 6. Besednjak
 
 ### 6.1 Naloga (Task)
+
 -**Definicija:** Osnovna enota v aplikaciji, ki predstavlja opravilo ali cilj, ki ga želi uporabnik doseči.
 
 -**Uporaba:** Naloge lahko uporabnik oznaci (narejeno, nenarejeno, v poteku...), zato da vidi svoj napredek.
+
 ### 6.2 Rok (Deadline)
+
 -**Definicija:** Določen datum, do kdaj naj bo naloga dokončana.
 
 -**Uporaba:** Uporabnik lahko nastavi rok za vsako nalogo, da jo lažje opravi pravočasno.
+
 ### 6.3 Prioriteta (Priority)
+
 -**Definicija:** Vrednost, ki nalogi določa njeno pomembnost. Običajno je rangirana od "nizke" do "visoke" prioritete.
 
 -**Uporaba:** Uporabniki lahko določijo prioriteto vsaki nalogi, kar omogoča lažjo organizacijo opravil po pomembnosti.
-### 6.4  Iskalna vrstica (Search Bar)
+
+### 6.4 Iskalna vrstica (Search Bar)
+
 -**Definicija:** Orodje v uporabniškem vmesniku, ki omogoča uporabnikom, da hitro poiščejo določeno nalogo.
 
 -**Uporaba:** Uporabniki lahko hitro najdejo specifične naloge z vnosom besed v iskalno vrstico, kar izboljša navigacijo med številnimi nalogami.
+
 ### 6.5 Uporabnik (User)
+
 -**Definicija:** Oseba, ki uporablja aplikacijo "To-Do" za organizacijo in upravljanje svojih nalog.
 
 -**Uporaba:** Uporabnik se lahko registrira in prijavi v aplikacijo, da dostopa do svojih osebnih seznamov nalog, doda nove naloge, označi naloge kot opravljene, ter uporablja iskalne funkcije za učinkovitejše sledenje napredku.
