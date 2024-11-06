@@ -8,19 +8,31 @@
 <body>
     <div id="myDIV" class="header">
         <h2 style="margin:5px">Moj To-Do List</h2>
+
+        <!-- Task creation form -->
         <div class="create-task">
             <input type="text" id="taskTitle" placeholder="Title..." />
             <input type="date" id="taskEndDate" placeholder="End Date..." />
             <input type="text" id="taskDescription" placeholder="Description..." />
+            <select id="taskStatus">
+                <option value="">Select Status...</option>
+                <option value="Pending">Pending</option>
+                <option value="In Progress">In Progress</option>
+                <option value="Completed">Completed</option>
+            </select>
             <span onclick="createTask()" class="addBtn">Add Task</span>
         </div>
+
+        <!-- Search input -->
         <div class="search-wrapper">
             <input placeholder="Search" type="search" id="search" data-search>
         </div>
     </div>
-    <ul id="myUL">
 
-    </ul>
+    <!-- Task list -->
+    <ul id="myUL"></ul>
+
+    <!-- Modal for editing tasks -->
     <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
@@ -40,6 +52,14 @@
                     <div class="mb-3">
                         <label for="editTaskDescription" class="form-label">Description</label>
                         <input type="text" id="editTaskDescription" class="form-control" placeholder="Description...">
+                    </div>
+                    <div class="mb-3">
+                        <label for="editTaskStatus" class="form-label">Status</label>
+                        <select id="editTaskStatus" class="form-control">
+                            <option value="Pending">Pending</option>
+                            <option value="In Progress">In Progress</option>
+                            <option value="Completed">Completed</option>
+                        </select>
                     </div>
                 </div>
                 <div class="modal-footer">
