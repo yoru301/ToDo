@@ -38,9 +38,9 @@ Projekt sledi naslednjim standardom kodiranja:
 
 ### 4.1 Predpogoji
 
-- [Node.js](https://nodejs.org/) (priporočena verzija 16 ali več)
-- [npm](https://www.npmjs.com/) za upravljanje paketov
-- SQL baza podatkov (MySQL)
+- [Node.js](https://nodejs.org/) (v21.7.2 ali več)
+- [npm](https://www.npmjs.com/) za upravljanje paketov (v10.9.0 ali več)
+- SQL baza podatkov (MySQL v9.0.1 ali več)
 
 ### 4.2 Koraki za namestitev
 
