@@ -4,7 +4,7 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "tasks")  // Maps this entity to the 'task' table in your database
+@Table(name = "tasks")  // Maps this entity to the 'tasks' table in your database
 public class Task {
 
     @Id
@@ -20,15 +20,19 @@ public class Task {
     @Column(name = "description")  // Maps to 'description' column
     private String description;
 
+    @Column(name = "status")  // Maps to 'status' column
+    private String status;
+
     // Default constructor (required by JPA)
     public Task() {
     }
 
-    // Constructor with parameters (optional but useful for convenience)
-    public Task(String title, LocalDate endDate, String description) {
+    // Constructor with parameters (including the new status field)
+    public Task(String title, LocalDate endDate, String description, String status) {
         this.title = title;
         this.endDate = endDate;
         this.description = description;
+        this.status = status;
     }
 
     // Getters and Setters for each field
@@ -65,7 +69,15 @@ public class Task {
         this.description = description;
     }
 
-    // Optional: Override toString() to easily print Task details
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
+    // Override toString to include status for easier task detail printing
     @Override
     public String toString() {
         return "Task{" +
@@ -73,6 +85,7 @@ public class Task {
                 ", title='" + title + '\'' +
                 ", endDate=" + endDate +
                 ", description='" + description + '\'' +
+                ", status='" + status + '\'' +
                 '}';
     }
 }
