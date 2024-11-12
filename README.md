@@ -118,50 +118,8 @@ Uporabnik lahko izbere možnost za ponastavitev gesla, če ga je pozabil.
 
 ---
 
-**Primer uporabe: Iskanje in filtriranje nalog**  
-**ID:** UC3  
-**Cilj:** Uporabnik želi poiskati specifične naloge ali filtrirati naloge glede na različne parametre, kot so rok ali prioriteta.  
-**Akterji:** Prijavljen uporabnik  
-**Predpogoji:** Uporabnik je prijavljen v aplikacijo.  
-**Stanje sistema po PU:** Sistem prikaže filtrirane naloge glede na uporabnikove nastavitve.  
-
-**Scenarij:**  
-1. Uporabnik odpre seznam nalog in izbere možnost "Filtriraj".  
-2. Sistem prikaže različne filtre (po rokih, prioriteti, statusu).  
-3. Uporabnik izbere želene filtre in pritisne "Uporabi".  
-4. Sistem prikaže naloge, ki ustrezajo izbranim kriterijem.  
-
-**Alternativni tokovi:**  
-Če ni najdenih nalog, sistem prikaže obvestilo "Ni rezultatov".  
-
-**Izjeme:**  
-Če pride do napake pri prenosu podatkov, sistem obvesti uporabnika o napaki.  
-
----
-
-**Primer uporabe: Urejanje To-Do nalog**  
-**ID:** UC4  
-**Cilj:** Uporabnik želi urediti obstoječo To-Do nalogo.  
-**Akterji:** Prijavljen uporabnik  
-**Predpogoji:** Uporabnik je prijavljen in ima obstoječo nalogo.  
-**Stanje sistema po PU:** Sistem posodobi nalogo z novimi podatki.  
-
-**Scenarij:**  
-1. Uporabnik izbere nalogo za urejanje.  
-2. Sistem prikaže podrobnosti naloge.  
-3. Uporabnik naredi potrebne spremembe in pritisne "Shrani".  
-4. Sistem posodobi nalogo in prikaže posodobljeno različico.  
-
-**Alternativni tokovi:**  
-Če uporabnik zapre okno brez shranjevanja, se spremembe zavržejo.  
-
-**Izjeme:**  
-Če pride do napake pri shranjevanju, sistem prikaže obvestilo o napaki.  
-
----
-
 **Primer uporabe: Dodajanje To-Do nalog**  
-**ID:** UC5  
+**ID:** UC3
 **Cilj:** Uporabnik želi ustvariti novo nalogo, ki jo bo lahko spremljal in urejal.  
 **Akterji:** Prijavljen uporabnik  
 **Predpogoji:** Uporabnik je prijavljen.  
@@ -182,7 +140,7 @@ Uporabnik lahko izbere možnost za ponastavitev gesla, če ga je pozabil.
 ---
 
 **Primer uporabe: Brisanje To-Do nalog**  
-**ID:** UC6  
+**ID:** UC4
 **Cilj:** Uporabnik želi izbrisati obstoječo nalogo.  
 **Akterji:** Prijavljen uporabnik  
 **Predpogoji:** Uporabnik je prijavljen in ima obstoječo nalogo.  
@@ -202,29 +160,8 @@ Uporabnik lahko izbere možnost za ponastavitev gesla, če ga je pozabil.
 
 ---
 
-**Primer uporabe: Filtriranje glede na rok in prioriteto**  
-**ID:** UC7  
-**Cilj:** Uporabnik želi filtrirati naloge glede na rok ali prioriteto, določeno z vrednostmi od 1 (nizka) do 3 (visoka prioriteta).  
-**Akterji:** Prijavljen uporabnik  
-**Predpogoji:** Uporabnik je prijavljen v aplikacijo in ima obstoječe naloge z določenimi roki in prioriteto.  
-**Stanje sistema po PU:** Sistem prikaže filtriran seznam nalog glede na izbrane filtre.  
-
-**Scenarij:**  
-1. Uporabnik odpre seznam nalog in izbere možnost za "Filtrirajte po roku in prioritete".  
-2. Sistem prikaže možnosti filtriranja po rokih in prioritete (1, 2, ali 3).  
-3. Uporabnik izbere želene filtre in potrdi.  
-4. Sistem prikaže naloge, ki ustrezajo izbranim kriterijem.  
-
-**Alternativni tokovi:**  
-Če ni najdenih nalog, sistem prikaže obvestilo "Ni nalog s temi kriteriji".  
-
-**Izjeme:**  
-Če pride do napake pri filtriranju, sistem prikaže obvestilo o napaki.  
-
----
-
 **Primer uporabe: Vzdrževanje backenda**  
-**ID:** UC8  
+**ID:** UC5
 **Cilj:** Admin želi poskrbeti za nemoteno delovanje aplikacije s preverjanjem in posodabljanjem back-end sistema.  
 **Akterji:** Admin  
 **Predpogoji:** Admin mora imeti dostop do skrbniškega računa in sistem mora delovati.  
@@ -245,7 +182,7 @@ Uporabnik lahko izbere možnost za ponastavitev gesla, če ga je pozabil.
 ---
 
 **Primer uporabe: Vzdrževanje frontenda**  
-**ID:** UC9  
+**ID:** UC6  
 **Cilj:** Admin želi posodobiti ali optimizirati uporabniški vmesnik, da izboljša uporabniško izkušnjo.  
 **Akterji:** Admin  
 **Predpogoji:** Admin mora imeti dostop do skrbniškega računa.  
@@ -263,6 +200,202 @@ Uporabnik lahko izbere možnost za ponastavitev gesla, če ga je pozabil.
 **Izjeme:**  
 Če pride do napake pri posodabljanju vmesnika, sistem prikaže obvestilo o napaki.  
 
+---
+
+**Primer uporabe: Dodajanje nalog**  
+**ID:** UC7  
+**Cilj:** Admin želi dodati novo nalogo za uporabnike.  
+**Akterji:** Admin  
+**Predpogoji:** Admin mora biti prijavljen v sistem in imeti ustrezna dovoljenja za dodajanje nalog.  
+**Stanje sistema po PU:** Sistem doda novo nalogo v seznam nalog.  
+
+**Scenarij:**  
+1. Admin se prijavi v sistem.  
+2. Admin izbere možnost "Dodaj nalogo".  
+3. Sistem prikaže obrazec za vnos podrobnosti naloge (naziv naloge, rok, prioritetna raven).  
+4. Admin vnese podatke in klikne "Shrani".  
+5. Sistem shrani nalogo in jo prikaže v seznamu nalog.  
+
+**Alternativni tokovi:**  
+Če admin ne vnese vseh obveznih podatkov, sistem prikaže opozorilo o manjkajočih informacijah.  
+
+**Izjeme:**  
+Če pride do napake pri shranjevanju naloge, sistem prikaže obvestilo o napaki.  
+
+---
+
+**Primer uporabe: Brisanje nalog**  
+**ID:** UC8
+**Cilj:** Admin želi izbrisati obstoječo nalogo iz sistema.  
+**Akterji:** Admin  
+**Predpogoji:** Admin mora biti prijavljen v sistem in imeti ustrezna dovoljenja za brisanje nalog.  
+**Stanje sistema po PU:** Naloga je odstranjena iz sistema.  
+
+**Scenarij:**  
+1. Admin se prijavi v sistem.  
+2. Admin izbere nalogo, ki jo želi izbrisati.  
+3. Sistem prikaže možnost za brisanje naloge.  
+4. Admin potrdi brisanje naloge.  
+5. Sistem izbriše nalogo iz sistema in odstrani jo iz seznama nalog.  
+
+**Alternativni tokovi:**  
+Če admin prekliče postopek, naloga ostane v sistemu.  
+
+**Izjeme:**  
+Če naloge ni mogoče izbrisati (npr. zaradi napake v sistemu), se prikaže obvestilo o napaki.  
+
+---
+
+**Primer uporabe: Odstranjevanje uporabnikov**  
+**ID:** UC9  
+**Cilj:** Admin želi odstraniti uporabnika iz sistema.  
+**Akterji:** Admin  
+**Predpogoji:** Admin mora biti prijavljen in imeti ustrezna dovoljenja za odstranjevanje uporabnikov.  
+**Stanje sistema po PU:** Uporabnik je odstranjen iz sistema.  
+
+**Scenarij:**  
+1. Admin se prijavi v sistem.  
+2. Admin izbere uporabnika, ki ga želi odstraniti.  
+3. Sistem prikaže možnost za odstranitev uporabnika.  
+4. Admin potrdi odstranitev uporabnika.  
+5. Sistem odstrani uporabnika in njegove podatke iz sistema.  
+
+**Alternativni tokovi:**  
+Če admin prekliče postopek, uporabnik ostane v sistemu.  
+
+**Izjeme:**  
+Če odstranitev uporabnika ni mogoča (npr. zaradi napake), sistem prikaže obvestilo o napaki.  
+
+---
+**Primer uporabe: Spreminjanje uporabnikov**  
+**ID:** UC10  
+**Cilj:** Admin želi spremeniti podatke obstoječega uporabnika (npr. e-pošta, geslo).  
+**Akterji:** Admin  
+**Predpogoji:** Admin mora biti prijavljen v sistem in imeti ustrezna dovoljenja za spreminjanje uporabnikov.  
+**Stanje sistema po PU:** Podatki uporabnika so spremenjeni.  
+
+**Scenarij:**  
+1. Admin se prijavi v sistem.  
+2. Admin izbere uporabnika, katerega podatke želi spremeniti.  
+3. Sistem prikaže obstoječe podatke uporabnika.  
+4. Admin spremeni podatke (npr. spremeni e-poštni naslov) in potrdi spremembe.  
+5. Sistem shrani nove podatke in prikaže posodobljeni profil uporabnika.  
+
+**Alternativni tokovi:**  
+Če admin prekliče spremembe, uporabnikovi podatki ostanejo nespremenjeni.  
+
+**Izjeme:**  
+Če sprememba podatkov ni mogoča (npr. zaradi napake v sistemu), se prikaže obvestilo o napaki.  
+
+---
+
+**Primer uporabe: Iskanje nalog**  
+**ID:** UC11  
+**Cilj:** Uporabnik želi poiskati naloge, ki ustrezajo določenim kriterijem, kot so datum ali prioriteta, z dodatnim funkcionalnostjo sortiranja.  
+**Akterji:** Prijavljen uporabnik  
+**Predpogoji:** Uporabnik je prijavljen v sistem.  
+**Stanje sistema po PU:** Sistem prikaže seznam nalog, filtriranih po določenih kriterijih in dodatno razvrščenih.  
+
+**Scenarij:**  
+1. Uporabnik izbere možnost "Iskanje nalog".  
+2. Sistem omogoči iskanje po različnih kriterijih (npr. po datumu, prioriteti).  
+3. Uporabnik vnese iskane kriterije (npr. naloge z visoko prioriteto) in potrdi iskanje.  
+4. Sistem prikaže seznam nalog, ki ustrezajo iskalnim kriterijem, sortirane po izbranem parameterju (npr. datum).  
+
+**Alternativni tokovi:**  
+Če ni najdenih nalog, sistem prikaže sporočilo "Ni rezultatov".  
+
+**Izjeme:**  
+Če pride do napake pri iskanju nalog, sistem prikaže obvestilo o napaki.  
+
+---
+
+**Primer uporabe: Sortiranje**  
+**ID:** UC12  
+**Cilj:** Uporabnik želi sortirati naloge po različnih parametrih, kot so datum, prioriteta ali status.  
+**Akterji:** Prijavljen uporabnik  
+**Predpogoji:** Uporabnik je prijavljen v sistem.  
+**Stanje sistema po PU:** Sistem prikaže seznam nalog, sortiran po izbranem parametru.  
+
+**Scenarij:**  
+1. Uporabnik izbere možnost "Sortiraj naloge".  
+2. Sistem omogoči izbiro različnih parametrov sortiranja (npr. datum, prioriteta, status).  
+3. Uporabnik izbere enega ali več parametrov za sortiranje.  
+4. Sistem prikaže seznam nalog, sortiran po izbranih parametrih.  
+
+**Alternativni tokovi:**  
+Če uporabnik ne izbere parametra sortiranja, sistem prikaže seznam nalog brez razvrstitve.  
+
+**Izjeme:**  
+Če pride do napake pri sortiranju, sistem prikaže obvestilo o napaki.  
+
+---
+
+**Primer uporabe: Urejanje statusa To-Do nalog**  
+**ID:** UC13 
+**Cilj:** Uporabnik želi spremeniti status To-Do naloge (npr. iz "V teku" v "Zaključeno").  
+**Akterji:** Prijavljen uporabnik  
+**Predpogoji:** Uporabnik je prijavljen v sistem in ima nalogo, ki jo lahko spremeni.  
+**Stanje sistema po PU:** Status naloge je spremenjen.  
+
+**Scenarij:**  
+1. Uporabnik odpre seznam nalog in izbere nalogo, katere status želi spremeniti.  
+2. Sistem prikaže podrobnosti naloge.  
+3. Uporabnik izbere nov status naloge (npr. "Zaključeno").  
+4. Sistem posodobi status naloge in prikaže posodobljen seznam nalog.  
+
+**Alternativni tokovi:**  
+Če uporabnik ne izbere statusa, se naloga ne spremeni.  
+
+**Izjeme:**  
+Če sprememba statusa naloge ni mogoča (npr. zaradi napake v sistemu), se prikaže obvestilo o napaki.  
+
+---
+
+**Primer uporabe: Urejanje ToDo nalog**  
+**ID:** UC14  
+**Cilj:** Uporabnik želi urediti podrobnosti obstoječe To-Do naloge (npr. naslov, opis, datum).  
+**Akterji:** Prijavljen uporabnik  
+**Predpogoji:** Uporabnik je prijavljen v sistem in ima nalogo, ki jo lahko ureja.  
+**Stanje sistema po PU:** Podatki naloge so posodobljeni.  
+
+**Scenarij:**  
+1. Uporabnik odpre seznam svojih nalog.  
+2. Uporabnik izbere nalogo, ki jo želi urediti.  
+3. Sistem prikaže podrobnosti naloge.  
+4. Uporabnik spremeni podatke naloge (npr. spremeni naziv, opis, datum naloge).  
+5. Uporabnik potrdi spremembe.  
+6. Sistem shrani spremembe in prikaže posodobljene podatke naloge.  
+
+**Alternativni tokovi:**  
+Če uporabnik ne potrdi sprememb ali prekliče postopek, naloga ostane nespremenjena.  
+
+**Izjeme:**  
+Če pride do napake pri shranjevanju naloge (npr. zaradi napake v sistemu), se prikaže obvestilo o napaki.  
+
+---
+
+**Primer uporabe: Izbira parametra sortiranja**  
+**ID:** UC15  
+**Cilj:** Uporabnik želi izbrati parameter, po katerem se bodo naloge sortirale (npr. datum, prioriteta, status).  
+**Akterji:** Prijavljen uporabnik  
+**Predpogoji:** Uporabnik je prijavljen v sistem.  
+**Stanje sistema po PU:** Seznam nalog je sortiran glede na izbrani parameter.  
+
+**Scenarij:**  
+1. Uporabnik odpre seznam nalog.  
+2. Uporabnik izbere možnost "Sortiraj naloge".  
+3. Sistem prikaže seznam možnih parametrov sortiranja (npr. datum, prioriteta, status).  
+4. Uporabnik izbere enega ali več parametrov za sortiranje (npr. najprej po prioriteti, nato po datumu).  
+5. Sistem prikaže seznam nalog, sortiran po izbranih parametrih.  
+
+**Alternativni tokovi:**  
+Če uporabnik ne izbere parametra sortiranja, sistem prikaže seznam nalog brez razvrstitve.  
+
+**Izjeme:**  
+Če pride do napake pri sortiranju (npr. zaradi napake v bazi podatkov), se prikaže obvestilo o napaki.  
+
+---
 
 ## 6. Besednjak
 
