@@ -86,7 +86,7 @@ node index.js
 **Scenarij:**  
 1. Uporabnik odpre aplikacijo in izbere možnost "Prijava".  
 2. Sistem prikaže polji za vnos uporabniškega imena in gesla.  
-3. Uporabnik vnese svoje podatke in pritisne "Prijava".  
+3. Uporabnik vnese svoje podatke (uporabnisko ime in geslo) in pritisne "Prijava".  
 4. Sistem preveri pravilnost podatkov in uporabnika prijavi v račun.  
 
 **Alternativni tokovi:**  
