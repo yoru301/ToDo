@@ -428,3 +428,10 @@ Uporabnik lahko izbere možnost za ponastavitev gesla, če ga je pozabil.
 -**Definicija:** Oseba, ki uporablja aplikacijo "To-Do" za organizacijo in upravljanje svojih nalog.
 
 -**Uporaba:** Uporabnik se lahko registrira in prijavi v aplikacijo, da dostopa do svojih osebnih seznamov nalog, doda nove naloge, označi naloge kot opravljene, ter uporablja iskalne funkcije za učinkovitejše sledenje napredku.
+
+## 7. Razredni diagram
+### 7.1 Diagram
+![UML](UMLRIS.png)
+
+### 7.2 Opis
+
