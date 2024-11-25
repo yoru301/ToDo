@@ -5,6 +5,7 @@ import org.springframework.web.bind.annotation.*;
 import si.um.feri.vaja.dao.TaskRepository;
 import si.um.feri.vaja.vao.Task;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 
@@ -62,8 +63,12 @@ public class VajaController {
     // GET all tasks with optional filtering
     @GetMapping("/tasks/filter")
     public List<Task> getFilteredTasks(
-            @RequestParam(required = false) String endDate,
+            @RequestParam(required = false) LocalDate endDate,
             @RequestParam(required = false) Integer priority) {
+
+        // Preverimo, če je prejet datum v formatu yyyy-MM-dd
+        System.out.println("Received endDate: " + endDate);
+        System.out.println("Received priority: " + priority);
 
         if (endDate != null && priority != null) {
             return taskRepository.findByEndDateAndPriority(endDate, priority);

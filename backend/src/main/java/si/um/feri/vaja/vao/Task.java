@@ -37,7 +37,6 @@ public class Task {
         this.description = description;
         this.status = status;
         this.priority = priority;
-
     }
 
     // Getters and Setters for each field
