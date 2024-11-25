@@ -58,4 +58,22 @@ public class VajaController {
     public void deleteTask(@PathVariable Long id) {
         taskRepository.deleteById(id);
     }
+
+    // GET all tasks with optional filtering
+    @GetMapping("/tasks/filter")
+    public List<Task> getFilteredTasks(
+            @RequestParam(required = false) String endDate,
+            @RequestParam(required = false) Integer priority) {
+
+        if (endDate != null && priority != null) {
+            return taskRepository.findByEndDateAndPriority(endDate, priority);
+        } else if (endDate != null) {
+            return taskRepository.findByEndDate(endDate);
+        } else if (priority != null) {
+            return taskRepository.findByPriority(priority);
+        } else {
+            return taskRepository.findAll();
+        }
+    }
+
 }

@@ -23,16 +23,21 @@ public class Task {
     @Column(name = "status")  // Maps to 'status' column
     private String status;
 
+    @Column(name= "priority", nullable = false)
+    private Integer priority;
+
     // Default constructor (required by JPA)
     public Task() {
     }
 
     // Constructor with parameters (including the new status field)
-    public Task(String title, LocalDate endDate, String description, String status) {
+    public Task(String title, LocalDate endDate, String description, String status, Integer priority) {
         this.title = title;
         this.endDate = endDate;
         this.description = description;
         this.status = status;
+        this.priority = priority;
+
     }
 
     // Getters and Setters for each field
@@ -77,6 +82,14 @@ public class Task {
         this.status = status;
     }
 
+    public Integer getPriority() {
+        return priority;
+    }
+
+    public void setPriority(Integer priority) {
+        this.priority = priority;
+    }
+
     // Override toString to include status for easier task detail printing
     @Override
     public String toString() {
@@ -86,6 +99,7 @@ public class Task {
                 ", endDate=" + endDate +
                 ", description='" + description + '\'' +
                 ", status='" + status + '\'' +
+                ", priority=" + priority +
                 '}';
     }
 }
