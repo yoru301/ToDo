@@ -101,10 +101,12 @@ document.addEventListener("DOMContentLoaded", () => {
 // Create a new task
 function createTask() {
   const title = document.getElementById("taskTitle").value;
-  const endDate = document.getElementById("taskEndDate").value;
+  const endDate = new Date(document.getElementById("taskEndDate").value).toISOString().split("T")[0];
   const description = document.getElementById("taskDescription").value;
   const status = document.getElementById("taskStatus").value;
   const priority = document.getElementById("taskPriority").value;  // Capture priority
+
+  console.log("Formatted endDate:", endDate);
 
   if (!title || !endDate || !description || !status || !priority) {
     alert("Please fill in all fields.");
@@ -113,7 +115,7 @@ function createTask() {
 
   const newTask = {
     title: title,
-    end_date: endDate,
+    endDate: endDate,
     description: description,
     status: status,
     priority: priority  // Include priority
@@ -163,7 +165,7 @@ let currentTaskId = null;
 function openEditForm(task) {
   currentTaskId = task.id;
   document.getElementById("editTaskTitle").value = task.title;
-  document.getElementById("editTaskEndDate").value = task.end_date;
+  document.getElementById("editTaskEndDate").value = task.endDate;
   document.getElementById("editTaskDescription").value = task.description;
   document.getElementById("editTaskStatus").value = task.status;
   document.getElementById("editTaskPriority").value = task.priority;  // Set priority
@@ -193,7 +195,7 @@ function updateTask() {
 
   const updatedTask = {
       title: title,
-      end_date: endDate,
+      endDate: endDate,
       description: description,
       status: status,
       priority: priority  // Include priority

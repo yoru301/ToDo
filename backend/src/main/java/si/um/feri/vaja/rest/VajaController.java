@@ -37,6 +37,7 @@ public class VajaController {
     // POST (create) a new task
     @PostMapping("/tasks")
     public Task createTask(@RequestBody Task task) {
+        System.out.println("Received end_date: " + task.getEndDate());
         return taskRepository.save(task);
     }
 
