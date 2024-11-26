@@ -97,6 +97,8 @@ document.addEventListener("DOMContentLoaded", () => {
     );
     renderTaskList(filteredTasks);
   });
+  document.getElementById("filterEndDate").addEventListener("change", applyFilters);
+  document.getElementById("filterPriority").addEventListener("change", applyFilters);
 });
 
 // Create a new task
