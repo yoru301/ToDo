@@ -116,6 +116,14 @@ document.addEventListener("DOMContentLoaded", () => {
   });
   document.getElementById("filterEndDate").addEventListener("change", applyFilters);
   document.getElementById("filterPriority").addEventListener("change", applyFilters);
+
+  // Clear filters button
+  document.getElementById("clearFiltersButton").addEventListener("click", () => {
+    document.getElementById("filterEndDate").value = "";
+    document.getElementById("filterPriority").value = "";
+    document.getElementById("search").value = "";
+    pridobiPodatke(); // Fetch and display tasks without filters
+  });
 });
 
 // Create a new task

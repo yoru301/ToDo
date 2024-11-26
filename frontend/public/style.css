@@ -81,7 +81,7 @@ input {
 .addBtn {
   padding: 10px;
   width: 25%;
-  background: #84c7ff;
+  background: #8ecef8;
   color: #000000;
   float: left;
   text-align: center;
@@ -92,8 +92,7 @@ input {
 }
 
 .addBtn:hover {
-  background-color: #144c88;
-  color: #ffffff;
+  background-color: #569dcb;
 }
 
 .task-content {
@@ -181,4 +180,13 @@ input {
   padding: 5px; /* Add spacing inside inputs */
   border: 1px solid #ccc; /* Add a border for better visibility */
   font-size: 16px; /* Keep font size consistent */
+}
+
+.btn-primary {
+  background-color: #8ecef8 !important;
+  color: black !important;
+}
+
+.btn-primary:hover {
+  background-color: #569dcb !important;
 }
