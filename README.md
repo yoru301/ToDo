@@ -32,8 +32,6 @@ Projekt sledi naslednjim standardom kodiranja:
 - **Formatiranje**: Koda je formatirana s pomočjo Prettier, kar zagotavlja enotno obliko.
 - **Komentiranje**: Ključne funkcije in komponente so dokumentirane z JSDoc.
 
----
-
 ## 4. Navodila za nameščanje
 
 ### 4.1 Predpogoji
@@ -414,8 +412,6 @@ Uporabnik lahko izbere možnost za ponastavitev gesla, če ga je pozabil.
 **Izjeme:**  
 Če pride do napake pri sortiranju (npr. zaradi napake v bazi podatkov), se prikaže obvestilo o napaki.
 
----
-
 ## 6. Besednjak
 
 ### 6.1 Naloga (Task)
@@ -518,4 +514,98 @@ Razredni diagram prikazuje sistem za upravljanje uporabnikov, administratorjev i
   - `prioriteta`: Prioriteta naloge (številčna vrednost).
   - `status`: Trenutno stanje naloge (npr. "dodeljeno", "končano").
 
+## 8. Implementacija funkcionalnosti
+
+![Filtriranje](Filtriranje.png)
+
+### **Filtriranje Nalog**
+
+Opis nove funkcionalnosti **Filtriranje Nalog**, ki omogoča uporabniku enostavno iskanje in razvrščanje nalog glede na specifične kriterije.
+
 ---
+
+### 1. Filtriranje po datumu
+
+**Opis funkcionalnosti:**
+Filtriranje po datumu omogoča uporabniku, da izbere naloge glede na njihov datum začetka ali zaključka. Ta funkcionalnost je uporabna za pregled nalog v določenem časovnem obdobju.
+
+### **Kako deluje:**
+
+- #### 1. Pridobivanje podatkov z upoštevanjem filtrov
+
+  Funkcija `pridobiPodatke(filters = {})` pošlje zahtevo na backend API in pridobi naloge glede na filtre:
+
+  ```javascript
+  const url = new URL("http://localhost:8888/api/v1/tasks/filter");
+
+  // Dodaj filtre v URL, če so podani
+  if (filters.title) url.searchParams.append("title", filters.title);
+  if (filters.endDate) url.searchParams.append("endDate", filters.endDate);
+  if (filters.priority) url.searchParams.append("priority", filters.priority);
+
+  // Pošlji zahtevo na API
+  fetch(url)
+    .then((response) => response.json())
+    .then((data) => {
+      tasksData = data; // Shrani naloge
+      renderTaskList(data); // Posodobi prikaz na strani
+    })
+    .catch((error) => console.error("Napaka pri pridobivanju nalog:", error));
+  ```
+
+- #### 2. Uporaba filtrov
+
+  Funkcija `applyFilters()` zajame vrednost filtrov iz uporabniškega vmesnika in jih pošlje funkciji `pridobiPodatke(filters)`:
+
+  ```javascript
+  function applyFilters() {
+    const endDate = document.getElementById("filterEndDate").value;
+    const priority = document.getElementById("filterPriority").value;
+    const title = document.getElementById("search").value;
+
+    const filters = {};
+    if (title) filters.title = title; // Dodaj filter za naslov
+    if (endDate) filters.endDate = endDate; // Dodaj filter za rok
+    if (priority) filters.priority = priority; // Dodaj filter za prioriteto
+
+    pridobiPodatke(filters); // Posodobi naloge z novimi filtri
+  }
+  ```
+
+- #### 3. Samodejna posodobitev ob spremembi filtrov
+
+  Dogodki spremljajo spremembe filtrov in ob njih takoj uporabijo nove filtre:
+
+  ```javascript
+  document.getElementById("filterEndDate").addEventListener("change", applyFilters);
+  document.getElementById("filterPriority").addEventListener("change", applyFilters);
+  ```
+
+### **Kako preizkusiti funkcionalnost:**
+
+1. Odprite aplikacijo.
+2. Pojdite na sekcijo za upravljanje nalog.
+3. Kliknite na možnost **Filtriranje**.
+4. Izberite možnost **Filtriranje po datumu**.
+5. Vnesite želeni datum ali časovni interval in potrdite izbiro.
+6. Prikazal se bo seznam nalog, ki ustrezajo vašim kriterijem.
+
+---
+
+#### 2. Filtriranje po prioriteti
+
+**Opis funkcionalnosti:**
+Filtriranje po prioriteti omogoča uporabniku razvrščanje nalog glede na njihovo pomembnost, kar olajša osredotočanje na najbolj kritične naloge.
+
+### **Kako deluje:**
+
+[Razlaga :)](#kako-deluje)
+
+### **Kako preizkusiti funkcionalnost:**
+
+1. Odprite aplikacijo.
+2. Pojdite na sekcijo za upravljanje nalog.
+3. Kliknite na možnost **Filtriranje**.
+4. Izberite možnost **Filtriranje po prioriteti**.
+5. Izberite prioriteto iz ponujenega seznama (npr. visoka, srednja, nizka).
+6. Prikazal se bo seznam nalog, ki ustrezajo izbrani prioritizaciji.
