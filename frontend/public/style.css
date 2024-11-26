@@ -173,3 +173,24 @@ input {
   text-decoration: none;
   cursor: pointer;
 }
+
+.filter-container {
+  display: flex; /* Align items in a row by default */
+  flex-wrap: wrap; /* Allow wrapping to new lines for smaller screens */
+  gap: 10px; /* Add spacing between elements */
+  align-items: center; /* Vertically align elements */
+  margin: 10px 0; /* Optional: Add spacing around the filter container */
+}
+
+.filter-container label {
+  font-weight: bold; /* Optional: Make labels more prominent */
+  margin-right: 5px; /* Space between label and input */
+}
+
+.filter-container input[type="date"],
+.filter-container select {
+  width: auto; /* Override the global input width */
+  padding: 5px; /* Add spacing inside inputs */
+  border: 1px solid #ccc; /* Add a border for better visibility */
+  font-size: 16px; /* Keep font size consistent */
+}

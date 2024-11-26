@@ -64,14 +64,24 @@ public class VajaController {
     // GET all tasks with optional filtering
     @GetMapping("/tasks/filter")
     public List<Task> getFilteredTasks(
+            @RequestParam(required = false) String title,
             @RequestParam(required = false) LocalDate endDate,
             @RequestParam(required = false) Integer priority) {
 
-        // Preverimo, če je prejet datum v formatu yyyy-MM-dd
+        System.out.println("Received title: " + title);
         System.out.println("Received endDate: " + endDate);
         System.out.println("Received priority: " + priority);
 
-        if (endDate != null && priority != null) {
+        // Apply filters based on the combinations
+        if (title != null && endDate != null && priority != null) {
+            return taskRepository.findByTitleContainingIgnoreCaseAndEndDateAndPriority(title, endDate, priority);
+        } else if (title != null && endDate != null) {
+            return taskRepository.findByTitleContainingIgnoreCaseAndEndDate(title, endDate);
+        } else if (title != null && priority != null) {
+            return taskRepository.findByTitleContainingIgnoreCaseAndPriority(title, priority);
+        } else if (title != null) {
+            return taskRepository.findByTitleContainingIgnoreCase(title);
+        } else if (endDate != null && priority != null) {
             return taskRepository.findByEndDateAndPriority(endDate, priority);
         } else if (endDate != null) {
             return taskRepository.findByEndDate(endDate);
@@ -81,5 +91,4 @@ public class VajaController {
             return taskRepository.findAll();
         }
     }
-
 }

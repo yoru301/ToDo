@@ -5,6 +5,7 @@ function pridobiPodatke(filters = {}) {
   const url = new URL("http://localhost:8888/api/v1/tasks/filter");
   
   // If filters exist, add them to the URL
+  if (filters.title) url.searchParams.append("title", filters.title);
   if (filters.endDate) url.searchParams.append("endDate", filters.endDate);
   if (filters.priority) url.searchParams.append("priority", filters.priority);
 
@@ -224,8 +225,10 @@ function updateTask() {
 function applyFilters() {
   const endDate = document.getElementById("filterEndDate").value;
   const priority = document.getElementById("filterPriority").value;
+  const title = document.getElementById("search").value;
 
   const filters = {};
+  if (title) filters.title = title;
   if (endDate) filters.endDate = endDate;
   if (priority) filters.priority = priority;
 
