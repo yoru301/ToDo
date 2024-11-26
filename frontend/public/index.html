@@ -7,23 +7,23 @@
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 
-<body>
+<body">
     <div id="myDIV" class="header">
         <h2 style="margin:5px">Moj To-Do List</h2>
 
         <!-- Task creation form -->
         <div class="create-task">
-            <input type="text" id="taskTitle" placeholder="Title..." />
+            <input type="text" id="taskTitle" placeholder="Naslov..." />
             <input type="date" id="taskEndDate" placeholder="End Date..." />
-            <input type="text" id="taskDescription" placeholder="Description..." />
+            <input type="text" id="taskDescription" placeholder="Opis..." />
             <select id="taskStatus">
-                <option value="">Select Status...</option>
-                <option value="Pending">Pending</option>
-                <option value="In Progress">In Progress</option>
-                <option value="Completed">Completed</option>
+                <option value="">Izberi Status...</option>
+                <option value="V Čakanju">V čakanju</option>
+                <option value="V Teku">V teku</option>
+                <option value="Zaključeno">Zaključeno</option>
             </select>
             <select id="taskPriority">
-                <option value="">Select Priority...</option>
+                <option value="">Izberi Prioriteto...</option>
                 <option value="1">Nizka</option>
                 <option value="2">Srednja</option>
                 <option value="3">Visoka</option>
@@ -47,8 +47,6 @@
                 <option value="2">Srednja</option>
                 <option value="3">Visoka</option>
             </select>
-
-            <button onclick="applyFilters()">Filtriraj</button>
         </div>
     </div>
 
@@ -66,35 +64,36 @@
                 <div class="modal-body">
                     <!-- Title -->
                     <div class="mb-3">
-                        <label for="editTaskTitle" class="form-label">Title</label>
+                        <label for="editTaskTitle" class="form-label">Naslov</label>
                         <input type="text" id="editTaskTitle" class="form-control" placeholder="Title...">
                     </div>
                     <!-- End Date -->
                     <div class="mb-3">
-                        <label for="editTaskEndDate" class="form-label">End Date</label>
+                        <label for="editTaskEndDate" class="form-label">Rok Naloge</label>
                         <input type="date" id="editTaskEndDate" class="form-control">
                     </div>
                     <!-- Description -->
                     <div class="mb-3">
-                        <label for="editTaskDescription" class="form-label">Description</label>
+                        <label for="editTaskDescription" class="form-label">Opis</label>
                         <input type="text" id="editTaskDescription" class="form-control" placeholder="Description...">
                     </div>
                     <!-- Status -->
                     <div class="mb-3">
                         <label for="editTaskStatus" class="form-label">Status</label>
                         <select id="editTaskStatus" class="form-control">
-                            <option value="Pending">Pending</option>
-                            <option value="In Progress">In Progress</option>
-                            <option value="Completed">Completed</option>
+                            <option value="V &Ccaron;akanju">V Čakanju</option>
+                            <option value="V Teku">V Teku</option>
+                            <option value="Zaklju&ccaron;eno">Zaključeno</option>
                         </select>
                     </div>
                     <!-- Priority -->
                     <div class="mb-3">
-                        <label for="editTaskPriority" class="form-label">Priority (1-Low, 2-Medium, 3-High):</label>
+                        <label for="editTaskPriority" class="form-label">Prioriteta (1-Nizka, 2-Srednja,
+                            3-Visoka):</label>
                         <select id="editTaskPriority" class="form-control">
-                            <option value="1">1 - Low</option>
-                            <option value="2">2 - Medium</option>
-                            <option value="3">3 - High</option>
+                            <option value="1">1 - Nizka</option>
+                            <option value="2">2 - Srednja</option>
+                            <option value="3">3 - Visoka</option>
                         </select>
                     </div>
                 </div>
@@ -105,11 +104,11 @@
             </div>
         </div>
     </div>
-    
+
 
     <!-- Bootstrap JS and Popper.js -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
     <script src="app.js"></script>
-</body>
+    </body>
 
 </html>

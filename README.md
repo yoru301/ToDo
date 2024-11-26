@@ -75,7 +75,7 @@ node index.js
 
 ### 5.1 Diagram
 
-![DPU](DPURIS1.png)
+![DPU](DPURIS.png)
 
 ### 5.2 Use case opisi
 

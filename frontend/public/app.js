@@ -3,7 +3,7 @@ let tasksData = [];
 // Fetch tasks data from the backend
 function pridobiPodatke(filters = {}) {
   const url = new URL("http://localhost:8888/api/v1/tasks/filter");
-  
+
   // If filters exist, add them to the URL
   if (filters.title) url.searchParams.append("title", filters.title);
   if (filters.endDate) url.searchParams.append("endDate", filters.endDate);
@@ -33,29 +33,46 @@ function renderTaskList(tasks) {
 
   tasks.forEach((task) => {
     const listItem = document.createElement("li");
-    listItem.className = "list-group-item d-flex justify-content-between align-items-center";
+    listItem.className = "list-group-item d-flex flex-column p-3";
 
     const taskContent = document.createElement("div");
-    taskContent.className = "task-content";
+    taskContent.className = "task-content bg-white p-3 rounded";
 
-    // Title and description
+    // Title
     const titleDiv = document.createElement("div");
-    titleDiv.className = "task-title";
-    titleDiv.textContent = `Title: ${task.title}`;
+    titleDiv.className = "task-title fw-bold mb-2";
+    titleDiv.style.fontSize = "1.25rem";
+    titleDiv.textContent = `${task.title}`;
 
+    // Description
     const descriptionDiv = document.createElement("div");
-    descriptionDiv.className = "task-description";
-    descriptionDiv.textContent = `| Description: ${task.description}`;
+    descriptionDiv.className = "task-description mb-2";
+    descriptionDiv.textContent = `Opis: ${task.description}`;
 
+    // Status
     const statusDiv = document.createElement("div");
-    statusDiv.className = "task-status";
-    statusDiv.textContent = `| Status: ${task.status}`;
+    statusDiv.className = "task-status mb-2";
+    statusDiv.textContent = `Status: ${task.status}`;
 
+    // End Date and Priority Row
+    const endDatePriorityDiv = document.createElement("div");
+    endDatePriorityDiv.className = "d-flex justify-content-between mb-2";
+
+    // End Date
+    const endDateDiv = document.createElement("div");
+    endDateDiv.className = "task-end-date";
+    endDateDiv.textContent = `Rok Naloge: ${task.endDate}`;
+
+    // Priority
     const priorityDiv = document.createElement("div");
     priorityDiv.className = "task-priority";
-    priorityDiv.textContent = `| Priority: ${task.priority}`;
+    priorityDiv.textContent = `Prioriteta: ${task.priority}`;
+
+    endDatePriorityDiv.appendChild(endDateDiv);
+    endDatePriorityDiv.appendChild(priorityDiv);
 
     const buttonsDiv = document.createElement("div");
+    buttonsDiv.className = "mt-2 d-flex justify-content-end";
 
     // Delete button
     const deleteButton = document.createElement("button");
@@ -74,7 +91,7 @@ function renderTaskList(tasks) {
     taskContent.appendChild(titleDiv);
     taskContent.appendChild(descriptionDiv);
     taskContent.appendChild(statusDiv);
-    taskContent.appendChild(priorityDiv);
+    taskContent.appendChild(endDatePriorityDiv);
     listItem.appendChild(taskContent);
     listItem.appendChild(buttonsDiv);
     taskList.appendChild(listItem);
@@ -104,10 +121,12 @@ document.addEventListener("DOMContentLoaded", () => {
 // Create a new task
 function createTask() {
   const title = document.getElementById("taskTitle").value;
-  const endDate = new Date(document.getElementById("taskEndDate").value).toISOString().split("T")[0];
+  const endDate = new Date(document.getElementById("taskEndDate").value)
+    .toISOString()
+    .split("T")[0];
   const description = document.getElementById("taskDescription").value;
   const status = document.getElementById("taskStatus").value;
-  const priority = document.getElementById("taskPriority").value;  // Capture priority
+  const priority = document.getElementById("taskPriority").value; // Capture priority
 
   console.log("Formatted endDate:", endDate);
 
@@ -121,7 +140,7 @@ function createTask() {
     endDate: endDate,
     description: description,
     status: status,
-    priority: priority  // Include priority
+    priority: priority, // Include priority
   };
 
   fetch("http://localhost:8888/api/v1/tasks", {
@@ -139,6 +158,12 @@ function createTask() {
     })
     .then((data) => {
       console.log("Task created:", data);
+      // Clear input fields
+      document.getElementById("taskTitle").value = "";
+      document.getElementById("taskEndDate").value = "";
+      document.getElementById("taskDescription").value = "";
+      document.getElementById("taskStatus").value = "";
+      document.getElementById("taskPriority").value = "";
       pridobiPodatke(); // Refresh task list after creating a task
     })
     .catch((error) => {
@@ -171,7 +196,7 @@ function openEditForm(task) {
   document.getElementById("editTaskEndDate").value = task.endDate;
   document.getElementById("editTaskDescription").value = task.description;
   document.getElementById("editTaskStatus").value = task.status;
-  document.getElementById("editTaskPriority").value = task.priority;  // Set priority
+  document.getElementById("editTaskPriority").value = task.priority; // Set priority
 
   const editModal = new bootstrap.Modal(document.getElementById("editModal"));
   editModal.show();
@@ -189,38 +214,38 @@ function updateTask() {
   const endDate = document.getElementById("editTaskEndDate").value;
   const description = document.getElementById("editTaskDescription").value;
   const status = document.getElementById("editTaskStatus").value;
-  const priority = document.getElementById("editTaskPriority").value;  // Capture priority
+  const priority = document.getElementById("editTaskPriority").value; // Capture priority
 
   if (!title || !endDate || !description || !status || !priority) {
-      alert("Please fill in all fields.");
-      return;
+    alert("Please fill in all fields.");
+    return;
   }
 
   const updatedTask = {
-      title: title,
-      endDate: endDate,
-      description: description,
-      status: status,
-      priority: priority  // Include priority
+    title: title,
+    endDate: endDate,
+    description: description,
+    status: status,
+    priority: priority, // Include priority
   };
 
   fetch(`http://localhost:8888/api/v1/tasks/${currentTaskId}`, {
-      method: "PUT",
-      headers: {
-          "Content-Type": "application/json",
-      },
-      body: JSON.stringify(updatedTask),
+    method: "PUT",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(updatedTask),
   })
-  .then((response) => {
+    .then((response) => {
       if (!response.ok) {
-          throw new Error("Network response was not ok");
+        throw new Error("Network response was not ok");
       }
       closeEditForm();
-      pridobiPodatke();  // Refresh task list after updating
-  })
-  .catch((error) => {
+      pridobiPodatke(); // Refresh task list after updating
+    })
+    .catch((error) => {
       console.error("Error updating task:", error);
-  });
+    });
 }
 
 // Apply filters
@@ -238,5 +263,5 @@ function applyFilters() {
 }
 
 document.addEventListener("DOMContentLoaded", () => {
-  pridobiPodatke();  // Fetch and display tasks
+  pridobiPodatke(); // Fetch and display tasks
 });

@@ -1,38 +1,27 @@
 body {
   margin: 0;
   min-width: 250px;
+  background-color: #ffffff !important;
 }
 
 * {
   box-sizing: border-box;
 }
 
+ol,
 ul {
   margin: 0;
-  padding: 0;
+  padding-left: 0 !important;
 }
 
 ul li {
-  cursor: pointer;
   position: relative;
   padding: 12px 20px 12px 20px;
   list-style-type: none;
   background: #eee;
+  background-color: #f0f0f0 !important;
   font-size: 18px;
   transition: 0.2s;
-
-  -webkit-user-select: none;
-  -moz-user-select: none;
-  -ms-user-select: none;
-  user-select: none;
-}
-
-ul li:nth-child(odd) {
-  background: #f9f9f9;
-}
-
-ul li:hover {
-  background: #ddd;
 }
 
 ul li.checked {
@@ -109,8 +98,7 @@ input {
 
 .task-content {
   display: flex; /* Use flexbox for layout */
-  flex-direction: row; /* Stack children vertically */
-  align-items: center; /* Center items horizontally */
+  flex-direction: column; /* Stack items vertically */
   justify-content: space-between;
 }
 
