@@ -609,3 +609,10 @@ Filtriranje po prioriteti omogoča uporabniku razvrščanje nalog glede na njiho
 4. Izberite možnost **Filtriranje po prioriteti**.
 5. Izberite prioriteto iz ponujenega seznama (npr. visoka, srednja, nizka).
 6. Prikazal se bo seznam nalog, ki ustrezajo izbrani prioritizaciji.
+
+## 9. Posodobitve
+
+- **Nova mapa: `testiranje`**  
+  Dodali smo mapo `testiranje`, ki vsebuje poročilo o rezultatih testiranja:
+  - **VajaApplicationTests**: Vsebuje nabor enotnih testov, s katerimi preverjamo ključne funkcionalnosti, kot so ustvarjanje, pridobivanje, brisanje in filtriranje nalog.
+  - **porocilo_testiranja.md**: Dokument s podrobnim opisom izvedenih testov, članov ekipe in analizo uspešnosti.
