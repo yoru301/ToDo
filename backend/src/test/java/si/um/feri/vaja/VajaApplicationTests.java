@@ -1,4 +1,4 @@
-package si.um.feri.vaja;
+/*package si.um.feri.vaja;
 
 import org.aspectj.lang.annotation.Before;
 import org.junit.jupiter.api.*;

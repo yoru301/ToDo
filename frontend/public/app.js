@@ -1,5 +1,6 @@
 let tasksData = [];
 
+
 // Fetch tasks data from the backend
 function pridobiPodatke(filters = {}) {
   const url = new URL("http://localhost:8888/api/v1/tasks/filter");
@@ -92,6 +93,29 @@ function renderTaskList(tasks) {
     taskContent.appendChild(descriptionDiv);
     taskContent.appendChild(statusDiv);
     taskContent.appendChild(endDatePriorityDiv);
+
+    // Attachments
+    const attachmentDiv = document.createElement("div");
+    attachmentDiv.className = "task-attachment mb-2";
+    
+    if (task.attachmentPath) {
+      
+      // Extract the file name from the attachmentPath (assuming it's something like '/uploads/myeurope.jpg')
+      const fileName = task.attachmentPath.split('/').pop();
+      
+      // Construct the correct URL for downloading the file
+      const downloadUrl = `http://localhost:8888/api/v1/tasks/download/${fileName}`; // Backend URL for downloading
+    
+      const attachmentLink = document.createElement("a");
+      attachmentLink.href = downloadUrl; // Correct link to the file on the backend
+      attachmentLink.textContent = "Download Attachment";
+      attachmentLink.target = "_blank"; // Open in new tab
+      attachmentDiv.appendChild(attachmentLink);
+    } else {
+      attachmentDiv.textContent = "No attachment";
+    }
+    
+    taskContent.appendChild(attachmentDiv);
     listItem.appendChild(taskContent);
     listItem.appendChild(buttonsDiv);
     taskList.appendChild(listItem);
@@ -136,27 +160,34 @@ function createTask() {
   const status = document.getElementById("taskStatus").value;
   const priority = document.getElementById("taskPriority").value; // Capture priority
 
-  console.log("Formatted endDate:", endDate);
+  const attachment = document.getElementById("taskAttachment").files[0]; // Get the file
 
   if (!title || !endDate || !description || !status || !priority) {
     alert("Please fill in all fields.");
     return;
   }
 
-  const newTask = {
-    title: title,
-    endDate: endDate,
-    description: description,
-    status: status,
-    priority: priority, // Include priority
-  };
+  const formData = new FormData();
+  formData.append("title", title);
+  formData.append("endDate", endDate);
+  formData.append("description", description);
+  formData.append("status", status);
+  formData.append("priority", priority);
+  
+  // If a file is selected, append it to FormData
+  if (attachment) {
+    
+    formData.append("attachment", attachment);
+  }
+
+  // Log the form data to debug
+  for (let [key, value] of formData.entries()) {
+    console.log(key, value);
+  }
 
   fetch("http://localhost:8888/api/v1/tasks", {
     method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(newTask),
+    body: formData, // Send the FormData with file and task data
   })
     .then((response) => {
       if (!response.ok) {
@@ -172,12 +203,13 @@ function createTask() {
       document.getElementById("taskDescription").value = "";
       document.getElementById("taskStatus").value = "";
       document.getElementById("taskPriority").value = "";
+      document.getElementById("taskAttachment").value = ""; // Clear file input
       pridobiPodatke(); // Refresh task list after creating a task
     })
     .catch((error) => {
       console.error("Error creating task:", error);
-    });
-}
+    })
+  }
 
 // Delete a task
 function deleteTask(taskId) {

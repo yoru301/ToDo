@@ -4,41 +4,43 @@ import jakarta.persistence.*;
 import java.time.LocalDate;
 
 @Entity
-@Table(name = "tasks")  // Maps this entity to the 'tasks' table in your database
+@Table(name = "tasks")
 public class Task {
 
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)  // Auto-generates unique IDs for each task
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "title", nullable = false)  // Maps to 'title' column; cannot be null
+    @Column(name = "title", nullable = false)
     private String title;
 
-    @Column(name = "end_date")  // Maps to 'end_date' column
+    @Column(name = "end_date")
     private LocalDate endDate;
 
-    @Column(name = "description")  // Maps to 'description' column
+    @Column(name = "description")
     private String description;
 
-    @Column(name = "status")  // Maps to 'status' column
+    @Column(name = "status")
     private String status;
 
-    @Column(name= "priority", nullable = false)
+    @Column(name = "priority", nullable = false)
     private Integer priority;
 
-    // Default constructor (required by JPA)
+    @Column(name = "attachment_path") // New field to store the path
+    private String attachmentPath;
+
     public Task() {
+
     }
 
-    // Constructor with parameters (including the new status field)
-    public Task(String title, LocalDate endDate, String description, String status, Integer priority) {
-        this.title = title;
-        this.endDate = endDate;
-        this.description = description;
-        this.status = status;
-        this.priority = priority;
+    // Getters and setters for new field
+    public String getAttachmentPath() {
+        return attachmentPath;
     }
 
+    public void setAttachmentPath(String attachmentPath) {
+        this.attachmentPath = attachmentPath;
+    }
     // Getters and Setters for each field
 
     public Long getId() {
@@ -89,7 +91,19 @@ public class Task {
         this.priority = priority;
     }
 
+    public Task(String title, LocalDate endDate, String description, String status, Integer priority, String attachmentPath) {
+        this.title = title;
+        this.endDate = endDate;
+        this.description = description;
+        this.status = status;
+        this.priority = priority;
+        this.attachmentPath = attachmentPath; // Initialize the attachmentPath
+    }
+
+
+
     // Override toString to include status for easier task detail printing
+
     @Override
     public String toString() {
         return "Task{" +
@@ -99,6 +113,7 @@ public class Task {
                 ", description='" + description + '\'' +
                 ", status='" + status + '\'' +
                 ", priority=" + priority +
+                ", attachmentPath='" + attachmentPath + '\'' +
                 '}';
     }
 }

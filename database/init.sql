@@ -15,4 +15,5 @@ CREATE TABLE tasks (
                        description TEXT,
                        end_date DATE,
                        status VARCHAR(50)
+                       attributepath VARCHAR(255)
 );
