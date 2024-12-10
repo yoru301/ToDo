@@ -73,7 +73,7 @@ node index.js
 
 ### 5.1 Diagram
 
-![DPU](DPURIS.png)
+![DPU](/assets/DPURIS.png)
 
 ### 5.2 Use case opisi
 
@@ -448,7 +448,7 @@ Uporabnik lahko izbere možnost za ponastavitev gesla, če ga je pozabil.
 
 ### 7.1 Diagram
 
-![UML](UMLRIS.png)
+![UML](/assets/UMLRIS.png)
 
 ### 7.2 Opis
 
@@ -516,7 +516,7 @@ Razredni diagram prikazuje sistem za upravljanje uporabnikov, administratorjev i
 
 ## 8. Implementacija funkcionalnosti
 
-![Filtriranje](Filtriranje.png)
+![Filtriranje](/assets/Filtriranje.png)
 
 ### **Filtriranje Nalog**
 
