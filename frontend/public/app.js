@@ -1,6 +1,5 @@
 let tasksData = [];
 
-
 // Fetch tasks data from the backend
 function pridobiPodatke(filters = {}) {
   const url = new URL("http://localhost:8888/api/v1/tasks/filter");
@@ -97,15 +96,14 @@ function renderTaskList(tasks) {
     // Attachments
     const attachmentDiv = document.createElement("div");
     attachmentDiv.className = "task-attachment mb-2";
-    
+
     if (task.attachmentPath) {
-      
       // Extract the file name from the attachmentPath (assuming it's something like '/uploads/myeurope.jpg')
-      const fileName = task.attachmentPath.split('/').pop();
-      
+      const fileName = task.attachmentPath.split("/").pop();
+
       // Construct the correct URL for downloading the file
       const downloadUrl = `http://localhost:8888/api/v1/tasks/download/${fileName}`; // Backend URL for downloading
-    
+
       const attachmentLink = document.createElement("a");
       attachmentLink.href = downloadUrl; // Correct link to the file on the backend
       attachmentLink.textContent = "Download Attachment";
@@ -114,7 +112,7 @@ function renderTaskList(tasks) {
     } else {
       attachmentDiv.textContent = "No attachment";
     }
-    
+
     taskContent.appendChild(attachmentDiv);
     listItem.appendChild(taskContent);
     listItem.appendChild(buttonsDiv);
@@ -173,10 +171,9 @@ function createTask() {
   formData.append("description", description);
   formData.append("status", status);
   formData.append("priority", priority);
-  
+
   // If a file is selected, append it to FormData
   if (attachment) {
-    
     formData.append("attachment", attachment);
   }
 
@@ -208,8 +205,8 @@ function createTask() {
     })
     .catch((error) => {
       console.error("Error creating task:", error);
-    })
-  }
+    });
+}
 
 // Delete a task
 function deleteTask(taskId) {
@@ -305,3 +302,53 @@ function applyFilters() {
 document.addEventListener("DOMContentLoaded", () => {
   pridobiPodatke(); // Fetch and display tasks
 });
+
+// Inicializacija Google API knjižnice
+function startApp() {
+  gapi.load("auth2", function () {
+    gapi.auth2
+      .init({
+        client_id: "ID",
+      })
+      .then(function () {
+        // Prikaz gumba za prijavo
+        document.getElementById("google-signin-btn").style.display = "block";
+      });
+  });
+}
+
+// Funkcija za prijavo
+function signIn() {
+  var auth2 = gapi.auth2.getAuthInstance();
+  auth2.signIn().then(function (googleUser) {
+    var id_token = googleUser.getAuthResponse().id_token;
+    // Tukaj pošlji id_token na backend za nadaljnjo obdelavo
+    console.log(id_token);
+    // Primer pošiljanja na backend
+    fetch(`http://localhost:8888/api/v1/auth/google/callback`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        token: id_token,
+      }),
+    })
+      .then((response) => response.json())
+      .then((data) => {
+        console.log("Logged in successfully:", data);
+        // Nadaljnje obdelovanje po prijavi
+      })
+      .catch((error) => {
+        console.error("Error:", error);
+      });
+  });
+}
+
+// Povezava gumba za prijavo
+document.getElementById("google-signin-btn").addEventListener("click", signIn);
+
+// Inicializacija aplikacije, ko je dokument pripravljen
+window.onload = function () {
+  startApp();
+};
