@@ -77,3 +77,4 @@ class VajaApplicationTests {
 		Assertions.assertEquals(1,taskRepository.count());
 	}
 }
+*/
