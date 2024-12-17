@@ -1,6 +1,5 @@
 let tasksData = [];
 
-
 // Fetch tasks data from the backend
 function pridobiPodatke(filters = {}) {
   const url = new URL("http://localhost:8888/api/v1/tasks/filter");
@@ -10,8 +9,16 @@ function pridobiPodatke(filters = {}) {
   if (filters.endDate) url.searchParams.append("endDate", filters.endDate);
   if (filters.priority) url.searchParams.append("priority", filters.priority);
 
-  // Fetch tasks from the backend with possible filters
-  fetch(url)
+  // Assuming your token is stored in localStorage
+  const token = localStorage.getItem("oauthToken");
+
+  // Fetch tasks from the backend with possible filters and token for authentication
+  fetch(url, {
+    method: "GET",
+    headers: {
+      Authorization: `Bearer ${token}`, // Pass the token to the backend
+    },
+  })
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -97,15 +104,14 @@ function renderTaskList(tasks) {
     // Attachments
     const attachmentDiv = document.createElement("div");
     attachmentDiv.className = "task-attachment mb-2";
-    
+
     if (task.attachmentPath) {
-      
       // Extract the file name from the attachmentPath (assuming it's something like '/uploads/myeurope.jpg')
-      const fileName = task.attachmentPath.split('/').pop();
-      
+      const fileName = task.attachmentPath.split("/").pop();
+
       // Construct the correct URL for downloading the file
       const downloadUrl = `http://localhost:8888/api/v1/tasks/download/${fileName}`; // Backend URL for downloading
-    
+
       const attachmentLink = document.createElement("a");
       attachmentLink.href = downloadUrl; // Correct link to the file on the backend
       attachmentLink.textContent = "Download Attachment";
@@ -114,7 +120,7 @@ function renderTaskList(tasks) {
     } else {
       attachmentDiv.textContent = "No attachment";
     }
-    
+
     taskContent.appendChild(attachmentDiv);
     listItem.appendChild(taskContent);
     listItem.appendChild(buttonsDiv);
@@ -173,10 +179,9 @@ function createTask() {
   formData.append("description", description);
   formData.append("status", status);
   formData.append("priority", priority);
-  
+
   // If a file is selected, append it to FormData
   if (attachment) {
-    
     formData.append("attachment", attachment);
   }
 
@@ -208,8 +213,8 @@ function createTask() {
     })
     .catch((error) => {
       console.error("Error creating task:", error);
-    })
-  }
+    });
+}
 
 // Delete a task
 function deleteTask(taskId) {
@@ -304,4 +309,50 @@ function applyFilters() {
 
 document.addEventListener("DOMContentLoaded", () => {
   pridobiPodatke(); // Fetch and display tasks
+});
+
+// Add a function to fetch user info
+function fetchUserInfo() {
+  fetch(`http://localhost:8888/api/v1/user`, {
+    method: "GET",
+    credentials: "include",
+  })
+    .then((response) => {
+      if (!response.ok) throw new Error("Not authenticated");
+      return response.json();
+    })
+    .then((data) => {
+      if (data.error) {
+        console.log("User not authenticated");
+        document.getElementById("userInfo").textContent = "Not logged in.";
+      } else {
+        console.log("User Info:", data);
+        document.getElementById(
+          "userInfo"
+        ).textContent = `Logged in as: ${data.name} (${data.email})`;
+      }
+    })
+    .catch((error) => {
+      console.error("Error fetching user info:", error);
+    });
+}
+
+// Render Microsoft login button
+document.addEventListener("DOMContentLoaded", () => {
+  pridobiPodatke(); // Fetch and display tasks
+  fetchUserInfo(); // Fetch user info on page load
+
+  const loginButton = document.createElement("button");
+  loginButton.textContent = "Login with Microsoft";
+  loginButton.className = "btn btn-primary";
+  loginButton.onclick = () => {
+    window.location.href = "/login/microsoft"; // Redirect to Microsoft login
+  };
+
+  const userInfoDiv = document.createElement("div");
+  userInfoDiv.id = "userInfo";
+  userInfoDiv.textContent = "Loading user info...";
+
+  document.body.insertBefore(userInfoDiv, document.body.firstChild);
+  document.body.insertBefore(loginButton, userInfoDiv.nextSibling);
 });
