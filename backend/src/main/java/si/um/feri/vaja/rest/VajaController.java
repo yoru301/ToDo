@@ -77,7 +77,7 @@ public class VajaController {
         // Assuming the files are stored in a directory called 'uploads'
         Path filePath = Paths.get(uploadDir).resolve(fileName);
         Resource resource = new FileSystemResource(filePath);
-System.out.println(fileName);
+        System.out.println(fileName);
         if (resource.exists() && resource.isReadable()) {
             return ResponseEntity.ok()
                     .header(HttpHeaders.CONTENT_DISPOSITION, fileName)
