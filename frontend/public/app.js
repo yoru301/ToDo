@@ -199,7 +199,6 @@ let currentTaskId = null;
 
 let previouslyFocusedElement = null;
 
-
 // Open the edit form with existing task details
 function openEditForm(task) {
   currentTaskId = task.id;
