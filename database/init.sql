@@ -14,6 +14,6 @@ CREATE TABLE tasks (
                        title VARCHAR(255) NOT NULL,
                        description TEXT,
                        end_date DATE,
-                       status VARCHAR(50)
+                       status VARCHAR(50),
                        attributepath VARCHAR(255)
 );

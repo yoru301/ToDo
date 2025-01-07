@@ -100,8 +100,6 @@ public class Task {
         this.attachmentPath = attachmentPath; // Initialize the attachmentPath
     }
 
-
-
     // Override toString to include status for easier task detail printing
 
     @Override

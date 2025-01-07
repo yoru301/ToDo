@@ -11,16 +11,19 @@ public class SecurityConfig {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
+                // Authorization rules
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/", "/login**", "/error**").permitAll() // Replace antMatchers with requestMatchers
-                        .anyRequest().authenticated()
+                        .requestMatchers("/", "/home", "/public").permitAll()  // Public routes
+                        .anyRequest().authenticated()  // All other routes require authentication
                 )
+                // OAuth2 login configuration
                 .oauth2Login(oauth2 -> oauth2
-                        .loginPage("/oauth2/authorization/microsoft")
+                        .loginPage("/login")  // Custom login page (optional)
+                        .defaultSuccessUrl("/home", true)  // Redirect after successful login
                 )
+                // Logout configuration
                 .logout(logout -> logout
-                        .logoutSuccessUrl("/")
-                        .permitAll()
+                        .logoutSuccessUrl("/")  // Redirect after logout
                 );
 
         return http.build();

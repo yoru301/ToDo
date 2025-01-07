@@ -9,16 +9,8 @@ function pridobiPodatke(filters = {}) {
   if (filters.endDate) url.searchParams.append("endDate", filters.endDate);
   if (filters.priority) url.searchParams.append("priority", filters.priority);
 
-  // Assuming your token is stored in localStorage
-  const token = localStorage.getItem("oauthToken");
-
-  // Fetch tasks from the backend with possible filters and token for authentication
-  fetch(url, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`, // Pass the token to the backend
-    },
-  })
+  // Fetch tasks from the backend with possible filters
+  fetch(url)
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
@@ -100,28 +92,6 @@ function renderTaskList(tasks) {
     taskContent.appendChild(descriptionDiv);
     taskContent.appendChild(statusDiv);
     taskContent.appendChild(endDatePriorityDiv);
-
-    // Attachments
-    const attachmentDiv = document.createElement("div");
-    attachmentDiv.className = "task-attachment mb-2";
-
-    if (task.attachmentPath) {
-      // Extract the file name from the attachmentPath (assuming it's something like '/uploads/myeurope.jpg')
-      const fileName = task.attachmentPath.split("/").pop();
-
-      // Construct the correct URL for downloading the file
-      const downloadUrl = `http://localhost:8888/api/v1/tasks/download/${fileName}`; // Backend URL for downloading
-
-      const attachmentLink = document.createElement("a");
-      attachmentLink.href = downloadUrl; // Correct link to the file on the backend
-      attachmentLink.textContent = "Download Attachment";
-      attachmentLink.target = "_blank"; // Open in new tab
-      attachmentDiv.appendChild(attachmentLink);
-    } else {
-      attachmentDiv.textContent = "No attachment";
-    }
-
-    taskContent.appendChild(attachmentDiv);
     listItem.appendChild(taskContent);
     listItem.appendChild(buttonsDiv);
     taskList.appendChild(listItem);
@@ -166,33 +136,27 @@ function createTask() {
   const status = document.getElementById("taskStatus").value;
   const priority = document.getElementById("taskPriority").value; // Capture priority
 
-  const attachment = document.getElementById("taskAttachment").files[0]; // Get the file
+  console.log("Formatted endDate:", endDate);
 
   if (!title || !endDate || !description || !status || !priority) {
     alert("Please fill in all fields.");
     return;
   }
 
-  const formData = new FormData();
-  formData.append("title", title);
-  formData.append("endDate", endDate);
-  formData.append("description", description);
-  formData.append("status", status);
-  formData.append("priority", priority);
-
-  // If a file is selected, append it to FormData
-  if (attachment) {
-    formData.append("attachment", attachment);
-  }
-
-  // Log the form data to debug
-  for (let [key, value] of formData.entries()) {
-    console.log(key, value);
-  }
+  const newTask = {
+    title: title,
+    endDate: endDate,
+    description: description,
+    status: status,
+    priority: priority, // Include priority
+  };
 
   fetch("http://localhost:8888/api/v1/tasks", {
     method: "POST",
-    body: formData, // Send the FormData with file and task data
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify(newTask),
   })
     .then((response) => {
       if (!response.ok) {
@@ -208,7 +172,6 @@ function createTask() {
       document.getElementById("taskDescription").value = "";
       document.getElementById("taskStatus").value = "";
       document.getElementById("taskPriority").value = "";
-      document.getElementById("taskAttachment").value = ""; // Clear file input
       pridobiPodatke(); // Refresh task list after creating a task
     })
     .catch((error) => {
@@ -234,6 +197,9 @@ function deleteTask(taskId) {
 
 let currentTaskId = null;
 
+let previouslyFocusedElement = null;
+
+
 // Open the edit form with existing task details
 function openEditForm(task) {
   currentTaskId = task.id;
@@ -243,14 +209,38 @@ function openEditForm(task) {
   document.getElementById("editTaskStatus").value = task.status;
   document.getElementById("editTaskPriority").value = task.priority; // Set priority
 
-  const editModal = new bootstrap.Modal(document.getElementById("editModal"));
+  // Store previously focused element
+  previouslyFocusedElement = document.activeElement;
+
+  // Ensure aria-hidden is set to false when the modal is opened
+  const modalElement = document.getElementById("editModal");
+  modalElement.setAttribute("aria-hidden", "false"); // Show modal to assistive technology
+  modalElement.removeAttribute("inert"); // Allow interactions with modal content
+
+  // Show the modal using Bootstrap
+  const editModal = new bootstrap.Modal(modalElement);
   editModal.show();
+
+  // Set focus to the first focusable element in the modal
+  const firstFocusableElement = modalElement.querySelector("input, button, select, textarea");
+  if (firstFocusableElement) {
+    firstFocusableElement.focus();
+  }
 }
 
 // Close the edit form
 function closeEditForm() {
   const editModal = bootstrap.Modal.getInstance(document.getElementById("editModal"));
   editModal.hide();
+
+  // Ensure aria-hidden is set back to true when the modal is closed
+  const modalElement = document.getElementById("editModal");
+  modalElement.setAttribute("aria-hidden", "true"); // Hide modal from assistive technology
+
+  // Return focus to the previously focused element
+  if (previouslyFocusedElement) {
+    previouslyFocusedElement.focus();
+  }
 }
 
 // Update an existing task
@@ -309,50 +299,4 @@ function applyFilters() {
 
 document.addEventListener("DOMContentLoaded", () => {
   pridobiPodatke(); // Fetch and display tasks
-});
-
-// Add a function to fetch user info
-function fetchUserInfo() {
-  fetch(`http://localhost:8888/api/v1/user`, {
-    method: "GET",
-    credentials: "include",
-  })
-    .then((response) => {
-      if (!response.ok) throw new Error("Not authenticated");
-      return response.json();
-    })
-    .then((data) => {
-      if (data.error) {
-        console.log("User not authenticated");
-        document.getElementById("userInfo").textContent = "Not logged in.";
-      } else {
-        console.log("User Info:", data);
-        document.getElementById(
-          "userInfo"
-        ).textContent = `Logged in as: ${data.name} (${data.email})`;
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching user info:", error);
-    });
-}
-
-// Render Microsoft login button
-document.addEventListener("DOMContentLoaded", () => {
-  pridobiPodatke(); // Fetch and display tasks
-  fetchUserInfo(); // Fetch user info on page load
-
-  const loginButton = document.createElement("button");
-  loginButton.textContent = "Login with Microsoft";
-  loginButton.className = "btn btn-primary";
-  loginButton.onclick = () => {
-    window.location.href = "/login/microsoft"; // Redirect to Microsoft login
-  };
-
-  const userInfoDiv = document.createElement("div");
-  userInfoDiv.id = "userInfo";
-  userInfoDiv.textContent = "Loading user info...";
-
-  document.body.insertBefore(userInfoDiv, document.body.firstChild);
-  document.body.insertBefore(loginButton, userInfoDiv.nextSibling);
 });

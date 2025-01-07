@@ -1,98 +1,31 @@
 package si.um.feri.vaja.rest;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.core.io.FileSystemResource;
-import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.multipart.MultipartFile;
 import si.um.feri.vaja.dao.TaskRepository;
 import si.um.feri.vaja.vao.Task;
-
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-import java.util.Map;
-
-import java.io.Console;
-import java.io.FileNotFoundException;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
+import java.time.LocalDate;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:3000")
 public class VajaController {
 
     @Autowired
     private TaskRepository taskRepository;
 
-    @Value("${file.upload-dir}")
-    private String uploadDir; // Path to the upload directory from application.properties
-
     // POST (create) a new task with file upload
     @PostMapping("/tasks")
-    public Task createTask(@RequestParam("title") String title,
-                           @RequestParam("endDate") String endDate,
-                           @RequestParam("description") String description,
-                           @RequestParam("status") String status,
-                           @RequestParam("priority") String priority,
-                           @RequestParam(value = "attachment", required = false) MultipartFile file) throws IOException {
-
-        // Create a new Task object and populate it with the received data
-        Task task = new Task();
-        task.setTitle(title);
-        task.setEndDate(LocalDate.parse(endDate));  // Ensure proper conversion to LocalDate
-        task.setDescription(description);
-        task.setStatus(status);
-        task.setPriority(Integer.parseInt(priority)); // Convert priority to an integer
-
-        // Handle file upload if provided
-        if (file != null && !file.isEmpty()) {
-            // Ensure the upload directory exists
-            Path path = Paths.get(uploadDir);
-            if (!Files.exists(path)) {
-                Files.createDirectories(path); // Create directory if it doesn't exist
-            }
-
-            // Save the file to the upload directory
-            String fileName = file.getOriginalFilename();
-            Path filePath = path.resolve(fileName); // Define the file path
-            Files.write(filePath, file.getBytes()); // Write the file content to disk
-            System.out.println(fileName);
-            // Store the file path in the task object
-            task.setAttachmentPath(filePath.toString()); // Save the file path in the database
-        }
+    public Task createTask(@RequestBody Task task) {
+        // Now the Task object will be populated from the JSON request body
+        task.setEndDate(LocalDate.parse(task.getEndDate().toString())); // Ensure proper conversion if needed
+        task.setPriority(Integer.parseInt(task.getPriority().toString())); // Convert priority to integer if it's a string
 
         // Save the task to the database
         return taskRepository.save(task);
     }
-
-    @GetMapping("/tasks/download/{fileName}")
-    public ResponseEntity<Resource> downloadFile(@PathVariable String fileName) {
-        // Assuming the files are stored in a directory called 'uploads'
-        Path filePath = Paths.get(uploadDir).resolve(fileName);
-        Resource resource = new FileSystemResource(filePath);
-System.out.println(fileName);
-        if (resource.exists() && resource.isReadable()) {
-            return ResponseEntity.ok()
-                    .header(HttpHeaders.CONTENT_DISPOSITION, fileName)
-                    .body(resource);
-        } else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
-        }
-    }
-
 
     // Simple hello endpoint to check if backend is running
     @GetMapping("/hello")
@@ -121,6 +54,7 @@ System.out.println(fileName);
                     task.setDescription(updatedTask.getDescription());
                     task.setEndDate(updatedTask.getEndDate());
                     task.setStatus(updatedTask.getStatus());
+                    task.setPriority(updatedTask.getPriority()); // Add this line to update the priority
                     return taskRepository.save(task);
                 })
                 .orElseThrow(() -> new RuntimeException("Task not found with id " + id));
@@ -159,16 +93,5 @@ System.out.println(fileName);
         }
     }
 
-    @GetMapping("/user")
-    public Map<String, Object> getUserInfo(@AuthenticationPrincipal OAuth2User principal) {
-        if (principal == null) {
-            return Map.of("error", "User is not authenticated");
-        }
-        return Map.of(
-                "name", principal.getAttribute("name"),
-                "email", principal.getAttribute("email"),
-                "attributes", principal.getAttributes()
-        );
-    }
 
 }
