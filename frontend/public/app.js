@@ -1,43 +1,51 @@
 let tasksData = [];
 
-// Fetch tasks data from the backend
 function pridobiPodatke(filters = {}) {
-  const url = new URL("http://localhost:8888/api/v1/tasks/filter");
+  // Osnovni URL za pridobivanje nalog
+  let url = "http://localhost:8888/api/v1/tasks/filter";
 
-  // If filters exist, add them to the URL
-  if (filters.title) url.searchParams.append("title", filters.title);
-  if (filters.endDate) url.searchParams.append("endDate", filters.endDate);
-  if (filters.priority) url.searchParams.append("priority", filters.priority);
+  // Dodajanje filtrov v URL
+  if (Object.keys(filters).length > 0) {
+      const queryParams = new URLSearchParams(filters).toString();
+      url += `?${queryParams}`;
+  }
 
-  // Assuming your token is stored in localStorage
-  const token = localStorage.getItem("oauthToken");
-
-  // Fetch tasks from the backend with possible filters and token for authentication
+  // Pošiljanje zahteve na strežnik
   fetch(url, {
-    method: "GET",
-    headers: {
-      Authorization: `Bearer ${token}`, // Pass the token to the backend
-    },
+      method: "GET",
+      credentials: "include",
+      headers: {
+          "Content-Type": "application/json",
+      },
   })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      return response.json();
-    })
-    .then((data) => {
-      tasksData = data;
-      renderTaskList(data);
-    })
-    .catch((error) => {
-      console.error("Error fetching tasks:", error);
-    });
+      .then((response) => {
+          if (!response.ok) {
+              throw new Error(`Napaka pri komunikaciji s strežnikom: ${response.status} ${response.statusText}`);
+          }
+          return response.json();
+      })
+      .then((data) => {
+          console.log("Prejeti podatki:", data);
+          // Posodobite prikaz nalog na strani
+          renderTaskList(data); // Predpostavljam, da imate funkcijo za prikaz nalog
+      })
+      .catch((error) => {
+          console.error("Error fetching tasks:", error);
+      });
 }
 
 // Render task list
 function renderTaskList(tasks) {
   const taskList = document.getElementById("myUL");
   taskList.innerHTML = ""; // Clear the list before re-rendering tasks
+
+  if (tasks.length === 0) {
+    const noTasksMessage = document.createElement("p");
+    noTasksMessage.textContent = "Trenutno ni nalog.";
+    noTasksMessage.className = "text-center text-muted";
+    taskList.appendChild(noTasksMessage);
+    return;
+  }
 
   tasks.forEach((task) => {
     const listItem = document.createElement("li");
@@ -50,17 +58,17 @@ function renderTaskList(tasks) {
     const titleDiv = document.createElement("div");
     titleDiv.className = "task-title fw-bold mb-2";
     titleDiv.style.fontSize = "1.25rem";
-    titleDiv.textContent = `${task.title}`;
+    titleDiv.textContent = task.title || "Brez naslova";
 
     // Description
     const descriptionDiv = document.createElement("div");
     descriptionDiv.className = "task-description mb-2";
-    descriptionDiv.textContent = `Opis: ${task.description}`;
+    descriptionDiv.textContent = `Opis: ${task.description || "Brez opisa"}`;
 
     // Status
     const statusDiv = document.createElement("div");
     statusDiv.className = "task-status mb-2";
-    statusDiv.textContent = `Status: ${task.status}`;
+    statusDiv.textContent = `Status: ${task.status || "Neznan status"}`;
 
     // End Date and Priority Row
     const endDatePriorityDiv = document.createElement("div");
@@ -69,12 +77,12 @@ function renderTaskList(tasks) {
     // End Date
     const endDateDiv = document.createElement("div");
     endDateDiv.className = "task-end-date";
-    endDateDiv.textContent = `Rok Naloge: ${task.endDate}`;
+    endDateDiv.textContent = `Rok Naloge: ${task.endDate || "Ni določen"}`;
 
     // Priority
     const priorityDiv = document.createElement("div");
     priorityDiv.className = "task-priority";
-    priorityDiv.textContent = `Prioriteta: ${task.priority}`;
+    priorityDiv.textContent = `Prioriteta: ${task.priority || "Ni določena"}`;
 
     endDatePriorityDiv.appendChild(endDateDiv);
     endDatePriorityDiv.appendChild(priorityDiv);
@@ -106,19 +114,16 @@ function renderTaskList(tasks) {
     attachmentDiv.className = "task-attachment mb-2";
 
     if (task.attachmentPath) {
-      // Extract the file name from the attachmentPath (assuming it's something like '/uploads/myeurope.jpg')
       const fileName = task.attachmentPath.split("/").pop();
-
-      // Construct the correct URL for downloading the file
-      const downloadUrl = `http://localhost:8888/api/v1/tasks/download/${fileName}`; // Backend URL for downloading
+      const downloadUrl = `http://localhost:8888/api/v1/tasks/download/${fileName}`;
 
       const attachmentLink = document.createElement("a");
-      attachmentLink.href = downloadUrl; // Correct link to the file on the backend
-      attachmentLink.textContent = "Download Attachment";
-      attachmentLink.target = "_blank"; // Open in new tab
+      attachmentLink.href = downloadUrl;
+      attachmentLink.textContent = "Prenesi Priponko";
+      attachmentLink.target = "_blank";
       attachmentDiv.appendChild(attachmentLink);
     } else {
-      attachmentDiv.textContent = "No attachment";
+      attachmentDiv.textContent = "Ni Priponke";
     }
 
     taskContent.appendChild(attachmentDiv);
@@ -154,6 +159,14 @@ document.addEventListener("DOMContentLoaded", () => {
     document.getElementById("search").value = "";
     pridobiPodatke(); // Fetch and display tasks without filters
   });
+
+  // Handle logout button
+  document.getElementById("logoutButton").addEventListener("click", () => {
+    // Preusmeri uporabnika na Microsoftovo URL za odjavo
+    window.location.href = "https://login.microsoftonline.com/common/oauth2/v2.0/logout?post_logout_redirect_uri=http://localhost:3000/";
+  });
+  
+  
 });
 
 // Create a new task
@@ -179,7 +192,7 @@ function createTask() {
   formData.append("description", description);
   formData.append("status", status);
   formData.append("priority", priority);
-
+  
   // If a file is selected, append it to FormData
   if (attachment) {
     formData.append("attachment", attachment);
@@ -190,15 +203,17 @@ function createTask() {
     console.log(key, value);
   }
 
+  // Odtukaj odstranite "mode: 'no-cors'" in omogočite CORS na strežniku
   fetch("http://localhost:8888/api/v1/tasks", {
     method: "POST",
     body: formData, // Send the FormData with file and task data
+    credentials: "include", // Include cookies for authentication if needed
   })
     .then((response) => {
       if (!response.ok) {
         throw new Error("Network response was not ok");
       }
-      return response.json();
+      return response.json(); // Parse JSON response from server
     })
     .then((data) => {
       console.log("Task created:", data);
@@ -216,83 +231,6 @@ function createTask() {
     });
 }
 
-// Delete a task
-function deleteTask(taskId) {
-  fetch(`http://localhost:8888/api/v1/tasks/${taskId}`, {
-    method: "DELETE",
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      pridobiPodatke(); // Refresh task list after deleting a task
-    })
-    .catch((error) => {
-      console.error("Error deleting task:", error);
-    });
-}
-
-let currentTaskId = null;
-
-// Open the edit form with existing task details
-function openEditForm(task) {
-  currentTaskId = task.id;
-  document.getElementById("editTaskTitle").value = task.title;
-  document.getElementById("editTaskEndDate").value = task.endDate;
-  document.getElementById("editTaskDescription").value = task.description;
-  document.getElementById("editTaskStatus").value = task.status;
-  document.getElementById("editTaskPriority").value = task.priority; // Set priority
-
-  const editModal = new bootstrap.Modal(document.getElementById("editModal"));
-  editModal.show();
-}
-
-// Close the edit form
-function closeEditForm() {
-  const editModal = bootstrap.Modal.getInstance(document.getElementById("editModal"));
-  editModal.hide();
-}
-
-// Update an existing task
-function updateTask() {
-  const title = document.getElementById("editTaskTitle").value;
-  const endDate = document.getElementById("editTaskEndDate").value;
-  const description = document.getElementById("editTaskDescription").value;
-  const status = document.getElementById("editTaskStatus").value;
-  const priority = document.getElementById("editTaskPriority").value; // Capture priority
-
-  if (!title || !endDate || !description || !status || !priority) {
-    alert("Please fill in all fields.");
-    return;
-  }
-
-  const updatedTask = {
-    title: title,
-    endDate: endDate,
-    description: description,
-    status: status,
-    priority: priority, // Include priority
-  };
-
-  fetch(`http://localhost:8888/api/v1/tasks/${currentTaskId}`, {
-    method: "PUT",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(updatedTask),
-  })
-    .then((response) => {
-      if (!response.ok) {
-        throw new Error("Network response was not ok");
-      }
-      closeEditForm();
-      pridobiPodatke(); // Refresh task list after updating
-    })
-    .catch((error) => {
-      console.error("Error updating task:", error);
-    });
-}
-
 // Apply filters
 function applyFilters() {
   const endDate = document.getElementById("filterEndDate").value;
@@ -307,52 +245,47 @@ function applyFilters() {
   pridobiPodatke(filters);
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  pridobiPodatke(); // Fetch and display tasks
-});
 
-// Add a function to fetch user info
-function fetchUserInfo() {
-  fetch(`http://localhost:8888/api/v1/user`, {
+
+document.getElementById("logoutButton").addEventListener("click", () => {
+  // Odjava uporabnika preko backend API-ja
+  fetch("http://localhost:8888/logout", {
     method: "GET",
-    credentials: "include",
+    credentials: "include"  // Poskrbi, da so piškotki vključeni
   })
-    .then((response) => {
-      if (!response.ok) throw new Error("Not authenticated");
-      return response.json();
-    })
-    .then((data) => {
-      if (data.error) {
-        console.log("User not authenticated");
-        document.getElementById("userInfo").textContent = "Not logged in.";
-      } else {
-        console.log("User Info:", data);
-        document.getElementById(
-          "userInfo"
-        ).textContent = `Logged in as: ${data.name} (${data.email})`;
-      }
-    })
-    .catch((error) => {
-      console.error("Error fetching user info:", error);
-    });
-}
-
-// Render Microsoft login button
-document.addEventListener("DOMContentLoaded", () => {
-  pridobiPodatke(); // Fetch and display tasks
-  fetchUserInfo(); // Fetch user info on page load
-
-  const loginButton = document.createElement("button");
-  loginButton.textContent = "Login with Microsoft";
-  loginButton.className = "btn btn-primary";
-  loginButton.onclick = () => {
-    window.location.href = "/login/microsoft"; // Redirect to Microsoft login
-  };
-
-  const userInfoDiv = document.createElement("div");
-  userInfoDiv.id = "userInfo";
-  userInfoDiv.textContent = "Loading user info...";
-
-  document.body.insertBefore(userInfoDiv, document.body.firstChild);
-  document.body.insertBefore(loginButton, userInfoDiv.nextSibling);
+  .then(() => {
+    document.getElementById("user-name").textContent = "Uporabnik ni prijavljen.";
+    document.getElementById("loginButton").style.display = "inline-block";  // Pokaži gumb za prijavo
+    document.getElementById("logoutButton").style.display = "none";  // Skrij gumb za odjavo
+    // Po uspešni odjavi bo uporabnik preusmerjen nazaj na prijavno stran
+    window.location.href = "http://localhost:8888/api/v1/oauth2/authorization/microsoft";
+    
+  })
+  .catch((error) => {
+    console.error("Napaka pri odjavi:", error);
+  });
 });
+
+
+
+document.addEventListener("DOMContentLoaded", function() {
+  fetch("http://localhost:8888/api/v1/user", {
+    method: "GET",
+    credentials: "include", // Preveri sejo uporabnika (piškotke)
+  })
+  .then(response => response.json())
+  .then(data => {
+    if (data.name) {
+      document.getElementById("user-name").textContent = `Pozdravljeni, ${data.name}`;
+      document.getElementById("loginButton").style.display = "none";  // Skrij gumb za prijavo
+    } else {
+      document.getElementById("user-name").textContent = "Uporabnik ni prijavljen.";
+      document.getElementById("loginButton").style.display = "inline-block";  // Pokaži gumb za prijavo
+      document.getElementById("logoutButton").style.display = "none";  // Skrij gumb za odjavo
+    }
+  })
+  .catch((error) => {
+    console.error("Napaka pri pridobivanju podatkov o uporabniku:", error);
+  });
+});
+

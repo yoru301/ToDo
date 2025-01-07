@@ -1,37 +1,45 @@
 package si.um.feri.vaja.rest;
-
+import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClient;
+import org.springframework.security.oauth2.client.OAuth2AuthorizedClientService;
+import org.springframework.security.oauth2.client.authentication.OAuth2AuthenticationToken;
+import org.springframework.security.oauth2.core.OAuth2AccessToken;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.core.io.FileSystemResource;
 import org.springframework.core.io.Resource;
-import org.springframework.core.io.UrlResource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
-import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import si.um.feri.vaja.dao.TaskRepository;
 import si.um.feri.vaja.vao.Task;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.oauth2.core.user.OAuth2User;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RestController;
-import java.util.Map;
-
-import java.io.Console;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@CrossOrigin
+@RequestMapping
+@CrossOrigin(origins = "http://localhost:3000") // Omogoči dostop iz frontend naslova
 public class VajaController {
 
     @Autowired
@@ -39,6 +47,75 @@ public class VajaController {
 
     @Value("${file.upload-dir}")
     private String uploadDir; // Path to the upload directory from application.properties
+
+    @Autowired
+    private OAuth2AuthorizedClientService authorizedClientService;
+
+    // Endpoint to handle OAuth2 login callback (redirect from Microsoft)
+    @GetMapping("/login/oauth2/code/microsoft")
+    public String handleLoginCallback(@RequestParam("code") String code,
+                                      @AuthenticationPrincipal OAuth2AuthenticationToken authentication,
+                                      Model model) {
+        // Get the OAuth2User from the authentication token
+        OAuth2User user = authentication.getPrincipal();  // Get the user's information (e.g., name)
+
+        // Load the OAuth2AuthorizedClient using the client registration id (e.g., "microsoft") and the name of the user (e.g., "user")
+        OAuth2AuthorizedClient authorizedClient = authorizedClientService.loadAuthorizedClient(
+                "microsoft", authentication.getName());
+
+        // Get the OAuth2 access token (if needed)
+        OAuth2AccessToken accessToken = authorizedClient.getAccessToken();
+
+        // Add user info to the model
+        model.addAttribute("username", user.getAttribute("name"));
+        model.addAttribute("accessToken", accessToken.getTokenValue());
+
+        // Return a view (you can customize the view here)
+        return "home"; // For example, a home page that shows the user info
+    }
+
+    // Login page (you can customize it)
+    @GetMapping("/login")
+    public String login() {
+        return "login"; // Returns login page (or you can redirect to Microsoft's OAuth2 login page)
+    }
+
+    // Logout
+    @GetMapping("/logout")
+    public void logout(HttpServletRequest request, HttpServletResponse response) throws IOException {
+        // Invalidiraj trenutno sejo uporabnika
+        request.getSession().invalidate();
+
+        // Invalidiraj OAuth2 piškotke (po potrebi)
+        Cookie oauthCookie = new Cookie("oauth_token", null);
+        oauthCookie.setMaxAge(0);  // Takoj izniči piškotek
+        oauthCookie.setPath("/");   // Poti naj bo /, da piškotek izbrišeš povsod
+        response.addCookie(oauthCookie);
+
+        // Preusmeri uporabnika na Microsoftov logout URL
+        String logoutUrl = "https://login.microsoftonline.com/common/oauth2/v2.0/logout?post_logout_redirect_uri=http://localhost:8888/api/v1/oauth2/authorization/microsoft";
+        response.sendRedirect(logoutUrl);  // Preusmeri uporabnika na Microsoftov logout URL
+    }
+
+
+
+
+
+    @GetMapping("/user")
+    public ResponseEntity<Map<String, String>> getUser(Authentication authentication) {
+        // Preveri, če je uporabnik prijavljen
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build(); // Uporabnik ni prijavljen
+        }
+
+        // Pridobi ime uporabnika
+        String userName = authentication.getName();
+
+        // Lahko tudi vrneš več podatkov, kot so email itd.
+        Map<String, String> response = new HashMap<>();
+        response.put("name", userName); // Lahko dodaš tudi druge podatke
+        return ResponseEntity.ok(response);
+    }
 
     // POST (create) a new task with file upload
     @PostMapping("/tasks")
@@ -128,9 +205,12 @@ System.out.println(fileName);
 
     // DELETE a task by ID
     @DeleteMapping("/tasks/{id}")
+    @CrossOrigin(origins = "http://localhost:3000")  // Omogoči CORS za DELETE metodo
     public void deleteTask(@PathVariable Long id) {
         taskRepository.deleteById(id);
     }
+
+
 
     // GET all tasks with optional filtering
     @GetMapping("/tasks/filter")
@@ -140,6 +220,7 @@ System.out.println(fileName);
             @RequestParam(required = false) Integer priority) {
 
         // Apply filters based on the combinations
+
         if (title != null && endDate != null && priority != null) {
             return taskRepository.findByTitleContainingIgnoreCaseAndEndDateAndPriority(title, endDate, priority);
         } else if (title != null && endDate != null) {
@@ -159,16 +240,5 @@ System.out.println(fileName);
         }
     }
 
-    @GetMapping("/user")
-    public Map<String, Object> getUserInfo(@AuthenticationPrincipal OAuth2User principal) {
-        if (principal == null) {
-            return Map.of("error", "User is not authenticated");
-        }
-        return Map.of(
-                "name", principal.getAttribute("name"),
-                "email", principal.getAttribute("email"),
-                "attributes", principal.getAttributes()
-        );
-    }
 
 }
