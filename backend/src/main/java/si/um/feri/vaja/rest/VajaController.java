@@ -14,6 +14,12 @@ import org.springframework.web.multipart.MultipartFile;
 import si.um.feri.vaja.dao.TaskRepository;
 import si.um.feri.vaja.vao.Task;
 
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.oauth2.core.user.OAuth2User;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RestController;
+import java.util.Map;
+
 import java.io.Console;
 import java.io.FileNotFoundException;
 import java.io.IOException;
@@ -152,4 +158,17 @@ System.out.println(fileName);
             return taskRepository.findAll();
         }
     }
+
+    @GetMapping("/user")
+    public Map<String, Object> getUserInfo(@AuthenticationPrincipal OAuth2User principal) {
+        if (principal == null) {
+            return Map.of("error", "User is not authenticated");
+        }
+        return Map.of(
+                "name", principal.getAttribute("name"),
+                "email", principal.getAttribute("email"),
+                "attributes", principal.getAttributes()
+        );
+    }
+
 }
